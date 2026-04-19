@@ -1,5 +1,37 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+#gate{position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:linear-gradient(135deg,#e8f0fe 0%,#f2f2ef 50%,#ede9fe 100%)}
+#gate.dark-gate{background:linear-gradient(135deg,#0d1520 0%,#111110 50%,#130f1f 100%)}
+.gate-box{width:100%;max-width:360px;background:#fff;border:1px solid #e2e2dd;border-radius:14px;padding:32px 28px;box-sizing:border-box}
+#gate.dark-gate .gate-box{background:#1a1a18;border-color:#2e2e2b}
+.gate-icon{width:38px;height:38px;border-radius:10px;background:#eff6ff;border:1px solid #bfdbfe;display:flex;align-items:center;justify-content:center;margin:0 0 18px}
+#gate.dark-gate .gate-icon{background:#1e2a3a;border-color:#1d4ed840}
+.gate-title{font-size:16px;font-weight:600;color:#1a1a1a;margin-bottom:4px;letter-spacing:-.2px}
+#gate.dark-gate .gate-title{color:#f0f0ec}
+.gate-sub{font-size:12.5px;color:#999;margin-bottom:22px;line-height:1.55}
+.gate-field{position:relative;margin-bottom:12px;width:100%}
+.gate-input{display:block;width:100%;padding:10px 38px 10px 13px;border-radius:8px;border:1px solid #e2e2dd;background:#fafaf8;color:#1a1a1a;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:13.5px;outline:none;transition:border-color .15s,box-shadow .15s;-webkit-appearance:none;box-sizing:border-box}
+#gate.dark-gate .gate-input{border-color:#2e2e2b;background:#252523;color:#f0f0ec}
+.gate-input:focus{border-color:#2563eb;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+#gate.dark-gate .gate-input:focus{border-color:#3b82f6;background:#1f1f1d;box-shadow:0 0 0 3px rgba(59,130,246,.08)}
+.gate-input::placeholder{color:#c4c4bf}
+#gate.dark-gate .gate-input::placeholder{color:#3a3a37}
+.gate-input.shake{animation:shake .35s ease}
+.gate-eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);cursor:pointer;color:#c4c4bf;background:none;border:none;padding:0;display:flex;align-items:center;transition:color .12s}
+.gate-eye:hover{color:#888}
+#gate.dark-gate .gate-eye{color:#444}
+#gate.dark-gate .gate-eye:hover{color:#888}
+.gate-btn{display:block;width:100%;padding:10px;border-radius:8px;border:none;background:#2563eb;color:#fff;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;transition:background .12s,transform .1s;box-sizing:border-box}
+.gate-btn:hover{background:#1d4ed8}
+.gate-btn:active{transform:scale(.98)}
+.gate-error{font-size:12px;color:#ef4444;margin-top:8px;display:none;align-items:center;gap:4px}
+#gate.dark-gate .gate-error{color:#fca5a5}
+.gate-error.show{display:flex}
+.gate-footer{margin-top:20px;font-size:11px;color:#ccc;text-align:center}
+#gate.dark-gate .gate-footer{color:#3a3a37}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@media(max-width:480px){.gate-box{padding:28px 22px 24px}}
+</style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg-page:#f2f2ef;--bg-panel:#fff;--bg-surface:#fafaf8;--bg-card:#fff;--bg-controls:#fafaf8;
@@ -165,7 +197,28 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:va
 .modal-notion-btn:hover{border-color:#888}
 </style>
 
-<div class="page" data-theme="light" id="root">
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-icon">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><rect x="1" y="4" width="14" height="10" rx="2" stroke="#2563eb" stroke-width="1.5"/><path d="M5 4V3a2 2 0 0 1 4 0v1" stroke="#2563eb" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="9" r="1.5" fill="#2563eb"/></svg>
+    </div>
+    <div class="gate-title">2026 Product Roadmap</div>
+    <div class="gate-sub">For Piggytech Product Team internal use only.</div>
+    <div class="gate-field">
+      <input class="gate-input" id="gate-pw" type="password" placeholder="Enter password" onkeydown="if(event.key==='Enter')checkPw()">
+      <button class="gate-eye" id="gate-eye" onclick="togglePw()" tabindex="-1">
+        <svg id="eye-icon" width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.3"/></svg>
+      </button>
+    </div>
+    <button class="gate-btn" onclick="checkPw()">Continue</button>
+    <div class="gate-error" id="gate-err">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v4M8 11v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Incorrect password.
+    </div>
+    <div class="gate-footer">Piggytech Global Limited · Confidential</div>
+  </div>
+</div>
+<div class="page" data-theme="light" id="root" style="display:none">
   <div class="page-header">
     <div class="page-header-left">
       <h1>Piggytech 2026 product roadmap</h1>
@@ -382,9 +435,12 @@ let activeTab="pv", isDark=false;
 function toggleTheme(){
   isDark=!isDark;
   const root=document.getElementById("root");
+  const gate=document.getElementById("gate");
   root.setAttribute("data-theme",isDark?"dark":"light");
   document.getElementById("modal").setAttribute("data-theme",isDark?"dark":"light");
   document.getElementById("toggle-lbl").textContent=isDark?"Dark":"Light";
+  if(isDark)gate.classList.add("dark-gate");
+  else gate.classList.remove("dark-gate");
   updateHeroBgs();
 }
 
@@ -511,5 +567,37 @@ function closeModalBg(e){
 }
 
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
-Object.keys(DATA).forEach(buildPanel);
+
+let pwVisible=false;
+function togglePw(){
+  pwVisible=!pwVisible;
+  const inp=document.getElementById("gate-pw");
+  const ico=document.getElementById("eye-icon");
+  inp.type=pwVisible?"text":"password";
+  ico.innerHTML=pwVisible
+    ?`<path d="M2 2l12 12M6.5 6.6A2 2 0 0 0 9.4 9.5M1 8s2.5-5 7-5c1.1 0 2.1.3 3 .7M15 8s-.9 1.8-2.5 3.2M5.5 12.5C6.3 12.8 7.1 13 8 13c4.5 0 7-5 7-5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>`
+    :`<path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.3"/>`;
+}
+
+function checkPw(){
+  const val=document.getElementById("gate-pw").value;
+  const err=document.getElementById("gate-err");
+  const inp=document.getElementById("gate-pw");
+  if(val==="piggyadmin26"){
+    const gate=document.getElementById("gate");
+    gate.style.opacity="0";
+    gate.style.transition="opacity .3s";
+    setTimeout(()=>{
+      gate.style.display="none";
+      document.getElementById("root").style.display="block";
+      Object.keys(DATA).forEach(buildPanel);
+    },300);
+  } else {
+    err.classList.add("show");
+    inp.classList.add("shake");
+    inp.value="";
+    setTimeout(()=>inp.classList.remove("shake"),400);
+    inp.focus();
+  }
+}
 </script>
