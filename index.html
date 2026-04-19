@@ -1,16 +1,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-#gate{position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:linear-gradient(135deg,#e8f0fe 0%,#f2f2ef 50%,#ede9fe 100%)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#1a1a1a;min-height:100vh;background:#f2f2ef}
+
+#gate{position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:linear-gradient(135deg,#e8f0fe 0%,#f2f2ef 50%,#ede9fe 100%);transition:opacity .3s}
 #gate.dark-gate{background:linear-gradient(135deg,#0d1520 0%,#111110 50%,#130f1f 100%)}
-.gate-box{width:100%;max-width:360px;background:#fff;border:1px solid #e2e2dd;border-radius:14px;padding:32px 28px;box-sizing:border-box}
+.gate-box{width:100%;max-width:360px;background:#fff;border:1px solid #e2e2dd;border-radius:14px;padding:32px 28px;text-align:left}
 #gate.dark-gate .gate-box{background:#1a1a18;border-color:#2e2e2b}
-.gate-icon{width:38px;height:38px;border-radius:10px;background:#eff6ff;border:1px solid #bfdbfe;display:flex;align-items:center;justify-content:center;margin:0 0 18px}
+.gate-icon{width:38px;height:38px;border-radius:10px;background:#eff6ff;border:1px solid #bfdbfe;display:flex;align-items:center;justify-content:center;margin-bottom:18px}
 #gate.dark-gate .gate-icon{background:#1e2a3a;border-color:#1d4ed840}
 .gate-title{font-size:16px;font-weight:600;color:#1a1a1a;margin-bottom:4px;letter-spacing:-.2px}
 #gate.dark-gate .gate-title{color:#f0f0ec}
 .gate-sub{font-size:12.5px;color:#999;margin-bottom:22px;line-height:1.55}
-.gate-field{position:relative;margin-bottom:12px;width:100%}
-.gate-input{display:block;width:100%;padding:10px 38px 10px 13px;border-radius:8px;border:1px solid #e2e2dd;background:#fafaf8;color:#1a1a1a;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:13.5px;outline:none;transition:border-color .15s,box-shadow .15s;-webkit-appearance:none;box-sizing:border-box}
+.gate-field{position:relative;margin-bottom:12px}
+.gate-input{display:block;width:100%;padding:10px 38px 10px 13px;border-radius:8px;border:1px solid #e2e2dd;background:#fafaf8;color:#1a1a1a;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:13.5px;outline:none;transition:border-color .15s,box-shadow .15s;-webkit-appearance:none}
 #gate.dark-gate .gate-input{border-color:#2e2e2b;background:#252523;color:#f0f0ec}
 .gate-input:focus{border-color:#2563eb;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
 #gate.dark-gate .gate-input:focus{border-color:#3b82f6;background:#1f1f1d;box-shadow:0 0 0 3px rgba(59,130,246,.08)}
@@ -21,7 +24,7 @@
 .gate-eye:hover{color:#888}
 #gate.dark-gate .gate-eye{color:#444}
 #gate.dark-gate .gate-eye:hover{color:#888}
-.gate-btn{display:block;width:100%;padding:10px;border-radius:8px;border:none;background:#2563eb;color:#fff;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;transition:background .12s,transform .1s;box-sizing:border-box}
+.gate-btn{display:block;width:100%;padding:10px;border-radius:8px;border:none;background:#2563eb;color:#fff;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;transition:background .12s,transform .1s}
 .gate-btn:hover{background:#1d4ed8}
 .gate-btn:active{transform:scale(.98)}
 .gate-error{font-size:12px;color:#ef4444;margin-top:8px;display:none;align-items:center;gap:4px}
@@ -31,46 +34,39 @@
 #gate.dark-gate .gate-footer{color:#3a3a37}
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
 @media(max-width:480px){.gate-box{padding:28px 22px 24px}}
-</style>
-*{box-sizing:border-box;margin:0;padding:0}
+
 :root{
   --bg-page:#f2f2ef;--bg-panel:#fff;--bg-surface:#fafaf8;--bg-card:#fff;--bg-controls:#fafaf8;
   --border-panel:#e2e2dd;--border-card:#e8e8e3;--border-controls:#f0f0eb;--border-half:#f5f5f2;
-  --text-primary:#1a1a1a;--text-secondary:#888;--text-muted:#bbb;--text-hint:#ccc;
+  --text-primary:#1a1a1a;--text-secondary:#888;--text-muted:#bbb;
   --tab-inactive:#999;--tab-hover:rgba(255,255,255,.5);--tab-active-bg:#fff;--tab-active-border:#e2e2dd;
   --chip-bg:#f2f2ef;--chip-color:#777;--chip-b-color:#1a1a1a;
   --pill-bg:#fff;--pill-border:#e2e2dd;--pill-color:#888;
   --legend-bg:#fafaf8;--hero-icon-bg:rgba(255,255,255,.8);
   --toggle-bg:#e8e8e3;--toggle-knob:#fff;--modal-overlay:rgba(0,0,0,.35);
   --tint-done:#f0fdf4;--tint-blocked:#fff5f5;
-  --pv-hero:#eff6ff;--pa-hero:#f5f3ff;--pvb-hero:#f0fdf4;--pmd-hero:#f5f3ff;--plat-hero:#fff7ed;
-  --notion-btn-bg:#fafaf8;--notion-btn-border:#e2e2dd;--notion-btn-color:#555;
 }
 [data-theme="dark"]{
   --bg-page:#111110;--bg-panel:#1a1a18;--bg-surface:#1f1f1d;--bg-card:#1f1f1d;--bg-controls:#1a1a18;
   --border-panel:#2e2e2b;--border-card:#2e2e2b;--border-controls:#2a2a27;--border-half:#252523;
-  --text-primary:#f0f0ec;--text-secondary:#888;--text-muted:#555;--text-hint:#444;
+  --text-primary:#f0f0ec;--text-secondary:#888;--text-muted:#555;
   --tab-inactive:#555;--tab-hover:rgba(255,255,255,.05);--tab-active-bg:#1a1a18;--tab-active-border:#2e2e2b;
   --chip-bg:#252523;--chip-color:#888;--chip-b-color:#e0e0dc;
   --pill-bg:#252523;--pill-border:#2e2e2b;--pill-color:#777;
   --legend-bg:#1a1a18;--hero-icon-bg:rgba(0,0,0,.3);
   --toggle-bg:#3a3a37;--toggle-knob:#f0f0ec;--modal-overlay:rgba(0,0,0,.6);
   --tint-done:#0d2018;--tint-blocked:#1f0d0d;
-  --pv-hero:#0d1520;--pa-hero:#130f20;--pvb-hero:#0a1a12;--pmd-hero:#110d1f;--plat-hero:#1a1208;
-  --notion-btn-bg:#252523;--notion-btn-border:#2e2e2b;--notion-btn-color:#999;
 }
-body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:var(--text-primary);min-height:100vh;background:var(--bg-page);transition:background .2s,color .2s}
-.page{max-width:1120px;margin:0 auto;padding:32px 20px 80px}
+
+.page{max-width:1120px;margin:0 auto;padding:32px 20px 80px;display:none}
 .page-header{margin-bottom:24px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .page-header-left h1{font-size:20px;font-weight:600;color:var(--text-primary);margin-bottom:3px}
 .page-header-left p{font-size:12.5px;color:var(--text-secondary)}
-
 .theme-toggle{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;padding:6px 0;flex-shrink:0}
 .toggle-track{width:36px;height:20px;border-radius:20px;background:var(--toggle-bg);position:relative;transition:background .2s;flex-shrink:0}
-.toggle-knob{position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:var(--toggle-knob);transition:transform .2s,background .2s}
+.toggle-knob{position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:var(--toggle-knob);transition:transform .2s}
 [data-theme="dark"] .toggle-knob{transform:translateX(16px)}
-.toggle-label{font-size:12px;font-weight:500;color:var(--text-muted);transition:color .2s}
-[data-theme="dark"] .toggle-label{color:var(--text-secondary)}
+.toggle-label{font-size:12px;font-weight:500;color:var(--text-muted)}
 
 .tabs-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .tabs{display:flex;gap:3px;min-width:max-content}
@@ -86,16 +82,18 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:va
 .product-hero{padding:18px 22px 16px;transition:background .2s}
 .hero-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .hero-left{display:flex;align-items:center;gap:11px}
-.hero-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(128,128,128,.15);background:var(--hero-icon-bg);transition:background .2s}
+.hero-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(128,128,128,.15);background:var(--hero-icon-bg)}
 .hero-name{font-size:15px;font-weight:600;color:var(--text-primary);line-height:1.3}
 .hero-desc{font-size:12px;color:var(--text-secondary);margin-top:2px}
 .hero-stats{display:flex;gap:7px;flex-wrap:wrap}
-.stat-chip{padding:4px 11px;border-radius:20px;font-size:11.5px;font-weight:500;background:var(--chip-bg);color:var(--chip-color);transition:background .2s}
+.stat-chip{padding:4px 11px;border-radius:20px;font-size:11.5px;font-weight:500;background:var(--chip-bg);color:var(--chip-color)}
 .stat-chip b{font-weight:600;color:var(--chip-b-color);margin-right:3px}
 .stat-blocked{background:#3a1212!important;color:#fca5a5!important}
 .stat-blocked b{color:#fca5a5!important}
+[data-theme="light"] .stat-blocked{background:#fee2e2!important;color:#991b1b!important}
+[data-theme="light"] .stat-blocked b{color:#991b1b!important}
 
-.controls{display:flex;gap:7px;padding:12px 22px;border-top:1px solid var(--border-controls);border-bottom:1px solid var(--border-controls);align-items:center;flex-wrap:wrap;background:var(--bg-controls);transition:background .2s,border-color .2s}
+.controls{display:flex;gap:7px;padding:12px 22px;border-top:1px solid var(--border-controls);border-bottom:1px solid var(--border-controls);align-items:center;flex-wrap:wrap;background:var(--bg-controls)}
 .filter-lbl{font-size:11px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-right:2px;white-space:nowrap}
 .pill{padding:4px 11px;border-radius:20px;font-size:11.5px;font-weight:500;cursor:pointer;border:1px solid var(--pill-border);background:var(--pill-bg);color:var(--pill-color);transition:all .12s;white-space:nowrap;user-select:none}
 .pill:hover{border-color:#888;color:var(--text-primary)}
@@ -105,12 +103,17 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:va
 .pill.f-scoping.on{background:#2a1f00;color:#fde047;border-color:#854d0e}
 .pill.f-notstarted.on{background:var(--chip-bg);color:var(--text-secondary);border-color:#444}
 .pill.f-blocked.on{background:#3a0a0a;color:#fca5a5;border-color:#991b1b}
-[data-theme="dark"] .pill.f-all.on{background:#f0f0ec;color:#111110;border-color:#f0f0ec}
+[data-theme="light"] .pill.f-all.on{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+[data-theme="light"] .pill.f-done.on{background:#d1fae5;color:#065f46;border-color:#6ee7b7}
+[data-theme="light"] .pill.f-indev.on{background:#dbeafe;color:#1e40af;border-color:#93c5fd}
+[data-theme="light"] .pill.f-scoping.on{background:#fef9c3;color:#854d0e;border-color:#fde047}
+[data-theme="light"] .pill.f-notstarted.on{background:#f3f4f6;color:#374151;border-color:#d1d5db}
+[data-theme="light"] .pill.f-blocked.on{background:#fee2e2;color:#991b1b;border-color:#fca5a5}
 
 .half-section{padding:18px 22px}
 .half-section+.half-section{border-top:1px solid var(--border-half)}
 .half-header{display:flex;align-items:center;gap:9px;margin-bottom:14px}
-.half-badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.2px}
+.half-badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
 .h1b{background:#0c1e35;color:#7dd3fc}
 .h2b{background:#1a0e35;color:#c4b5fd}
 [data-theme="light"] .h1b{background:#e0f2fe;color:#0369a1}
@@ -121,14 +124,14 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:va
 .card{background:var(--bg-card);border-radius:10px;border:1px solid var(--border-card);overflow:hidden;transition:box-shadow .15s,background .2s,border-color .2s;cursor:pointer}
 .card:hover{box-shadow:0 2px 12px rgba(0,0,0,.15)}
 .card:hover .card-title{text-decoration:underline;text-underline-offset:2px}
-.card-bar{height:3px;width:100%;display:block;flex-shrink:0}
-.card-body{padding:12px 14px 12px;transition:background .2s}
+.card-bar{height:3px;width:100%;display:block}
+.card-body{padding:12px 14px;transition:background .2s}
 .card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:7px}
 .card-title{font-size:13.5px;font-weight:600;color:var(--text-primary);line-height:1.4;flex:1;min-width:0}
 .st-pill{padding:3px 8px;border-radius:20px;font-size:10.5px;font-weight:600;flex-shrink:0;white-space:nowrap;margin-top:1px}
 .card-desc{font-size:12.5px;color:var(--text-secondary);line-height:1.65;margin-bottom:10px}
 .card-foot{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
-.team-tag{padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500;background:var(--chip-bg);color:var(--text-secondary);transition:background .2s}
+.team-tag{padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500;background:var(--chip-bg);color:var(--text-secondary)}
 .pr-badge{padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
 .notion-lnk{font-size:11px;color:var(--text-muted);text-decoration:none;margin-left:auto;transition:color .12s;white-space:nowrap;flex-shrink:0}
 .notion-lnk:hover{color:var(--text-secondary)}
@@ -160,7 +163,7 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:va
 .tint-done .card-body{background:var(--tint-done)}
 .tint-blocked .card-body{background:var(--tint-blocked)}
 
-.legend-bar{display:flex;gap:12px;flex-wrap:wrap;padding:12px 22px;background:var(--legend-bg);border-top:1px solid var(--border-controls);align-items:center;transition:background .2s,border-color .2s}
+.legend-bar{display:flex;gap:12px;flex-wrap:wrap;padding:12px 22px;background:var(--legend-bg);border-top:1px solid var(--border-controls);align-items:center}
 .l-sep{width:1px;height:14px;background:var(--border-card);flex-shrink:0}
 .l-lbl{font-size:10px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
 .l-grp{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
@@ -170,11 +173,11 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:va
 
 .modal-bg{display:none;position:fixed;inset:0;background:var(--modal-overlay);z-index:100;align-items:center;justify-content:center;padding:20px}
 .modal-bg.open{display:flex}
-.modal{background:var(--bg-panel);border-radius:14px;border:1px solid var(--border-panel);width:100%;max-width:600px;max-height:88vh;overflow-y:auto;position:relative;transition:background .2s,border-color .2s}
-.modal-header{padding:20px 22px 16px;border-bottom:1px solid var(--border-controls);position:sticky;top:0;background:var(--bg-panel);z-index:2;border-radius:14px 14px 0 0;transition:background .2s,border-color .2s}
+.modal{background:var(--bg-panel);border-radius:14px;border:1px solid var(--border-panel);width:100%;max-width:600px;max-height:88vh;overflow-y:auto;position:relative}
+.modal-header{padding:20px 22px 16px;border-bottom:1px solid var(--border-controls);position:sticky;top:0;background:var(--bg-panel);z-index:2;border-radius:14px 14px 0 0}
 .modal-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
 .modal-title{font-size:16px;font-weight:600;color:var(--text-primary);line-height:1.4;flex:1}
-.modal-close{width:28px;height:28px;border-radius:8px;border:1px solid var(--border-card);background:var(--bg-card);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;color:var(--text-secondary);transition:background .12s}
+.modal-close{width:28px;height:28px;border-radius:8px;border:1px solid var(--border-card);background:var(--bg-card);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;color:var(--text-secondary)}
 .modal-close:hover{background:var(--chip-bg)}
 .modal-badges{display:flex;gap:6px;flex-wrap:wrap}
 .modal-body{padding:20px 22px 24px}
@@ -193,7 +196,7 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:va
 [data-theme="light"] .modal-list.risks li::before{background:#fca5a5}
 [data-theme="light"] .modal-list.assumptions li::before{background:#93c5fd}
 [data-theme="light"] .modal-list.questions li::before{background:#fde047}
-.modal-notion-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;border:1px solid var(--notion-btn-border);background:var(--notion-btn-bg);font-size:12.5px;font-weight:500;color:var(--notion-btn-color);text-decoration:none;transition:all .12s;margin-top:4px}
+.modal-notion-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;border:1px solid var(--border-card);background:var(--bg-surface);font-size:12.5px;font-weight:500;color:var(--text-secondary);text-decoration:none;margin-top:4px}
 .modal-notion-btn:hover{border-color:#888}
 </style>
 
@@ -218,38 +221,27 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:va
     <div class="gate-footer">Piggytech Global Limited · Confidential</div>
   </div>
 </div>
-<div class="page" data-theme="light" id="root" style="display:none">
+
+<div class="page" id="root" data-theme="light">
   <div class="page-header">
     <div class="page-header-left">
       <h1>Piggytech 2026 product roadmap</h1>
       <p>Prepared by Product — Efe Ogufere &nbsp;·&nbsp; April 2026 &nbsp;·&nbsp; Internal &amp; Confidential</p>
     </div>
-    <div class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
+    <div class="theme-toggle" onclick="toggleTheme()">
       <div class="toggle-track"><div class="toggle-knob"></div></div>
       <span class="toggle-label" id="toggle-lbl">Light</span>
     </div>
   </div>
-
   <div class="tabs-wrap">
     <div class="tabs" id="tabs">
-      <div class="tab active" data-tab="pv" onclick="switchTab('pv')">
-        <span class="tab-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="4" width="14" height="10" rx="2" stroke="#2563eb" stroke-width="1.5"/><path d="M5 4V3a2 2 0 0 1 4 0v1" stroke="#2563eb" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="9" r="1.5" fill="#2563eb"/></svg></span>Piggyvest
-      </div>
-      <div class="tab" data-tab="pa" onclick="switchTab('pa')">
-        <span class="tab-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3.5" y="1" width="9" height="14" rx="2" stroke="#7c3aed" stroke-width="1.5"/><circle cx="8" cy="12" r="1" fill="#7c3aed"/><path d="M6 3.5h4" stroke="#7c3aed" stroke-width="1.5" stroke-linecap="round"/></svg></span>PocketApp
-      </div>
-      <div class="tab" data-tab="pvb" onclick="switchTab('pvb')">
-        <span class="tab-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5L14.5 5v6L8 14.5 1.5 11V5Z" stroke="#0d7c66" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 5.5v5M5.5 7l2.5 1.5L10.5 7" stroke="#0d7c66" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Piggyvest Business
-      </div>
-      <div class="tab" data-tab="pmd" onclick="switchTab('pmd')">
-        <span class="tab-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="#5b21f5" stroke-width="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="#5b21f5" stroke-width="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="#5b21f5" stroke-width="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="#5b21f5" stroke-width="1.5"/></svg></span>Pocket Merchant
-      </div>
-      <div class="tab" data-tab="plat" onclick="switchTab('plat')">
-        <span class="tab-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1l2 4h4l-3 3 1 4-4-2-4 2 1-4-3-3h4z" stroke="#b45309" stroke-width="1.4" stroke-linejoin="round"/></svg></span>Platform &amp; Initiatives
-      </div>
+      <div class="tab active" data-tab="pv" onclick="switchTab('pv')"><span class="tab-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="4" width="14" height="10" rx="2" stroke="#2563eb" stroke-width="1.5"/><path d="M5 4V3a2 2 0 0 1 4 0v1" stroke="#2563eb" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="9" r="1.5" fill="#2563eb"/></svg></span>Piggyvest</div>
+      <div class="tab" data-tab="pa" onclick="switchTab('pa')"><span class="tab-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3.5" y="1" width="9" height="14" rx="2" stroke="#7c3aed" stroke-width="1.5"/><circle cx="8" cy="12" r="1" fill="#7c3aed"/><path d="M6 3.5h4" stroke="#7c3aed" stroke-width="1.5" stroke-linecap="round"/></svg></span>PocketApp</div>
+      <div class="tab" data-tab="pvb" onclick="switchTab('pvb')"><span class="tab-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5L14.5 5v6L8 14.5 1.5 11V5Z" stroke="#0d7c66" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 5.5v5M5.5 7l2.5 1.5L10.5 7" stroke="#0d7c66" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Piggyvest Business</div>
+      <div class="tab" data-tab="pmd" onclick="switchTab('pmd')"><span class="tab-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="#5b21f5" stroke-width="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="#5b21f5" stroke-width="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="#5b21f5" stroke-width="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="#5b21f5" stroke-width="1.5"/></svg></span>Pocket Merchant</div>
+      <div class="tab" data-tab="plat" onclick="switchTab('plat')"><span class="tab-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1l2 4h4l-3 3 1 4-4-2-4 2 1-4-3-3h4z" stroke="#b45309" stroke-width="1.4" stroke-linejoin="round"/></svg></span>Platform &amp; Initiatives</div>
     </div>
   </div>
-
   <div class="panel-wrap">
     <div class="product-panel active" id="panel-pv"></div>
     <div class="product-panel" id="panel-pa"></div>
@@ -294,21 +286,11 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:va
 
 <script>
 const PRODUCTS={
-  pv:{name:"Piggyvest",desc:"Consumer savings & investments",
-    heroLight:"#eff6ff",heroDark:"#0d1520",
-    icon:`<svg width="20" height="20" viewBox="0 0 16 16" fill="none"><rect x="1" y="4" width="14" height="10" rx="2" stroke="#2563eb" stroke-width="1.5"/><path d="M5 4V3a2 2 0 0 1 4 0v1" stroke="#2563eb" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="9" r="1.5" fill="#2563eb"/></svg>`},
-  pa:{name:"PocketApp",desc:"Consumer payments app",
-    heroLight:"#f5f3ff",heroDark:"#130f20",
-    icon:`<svg width="20" height="20" viewBox="0 0 16 16" fill="none"><rect x="3.5" y="1" width="9" height="14" rx="2" stroke="#7c3aed" stroke-width="1.5"/><circle cx="8" cy="12" r="1" fill="#7c3aed"/><path d="M6 3.5h4" stroke="#7c3aed" stroke-width="1.5" stroke-linecap="round"/></svg>`},
-  pvb:{name:"Piggyvest Business",desc:"Business banking dashboard",
-    heroLight:"#f0fdf4",heroDark:"#0a1a12",
-    icon:`<svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M8 1.5L14.5 5v6L8 14.5 1.5 11V5Z" stroke="#0d7c66" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 5.5v5M5.5 7l2.5 1.5L10.5 7" stroke="#0d7c66" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>`},
-  pmd:{name:"Pocket Merchant",desc:"API-first merchant payments platform",
-    heroLight:"#f5f3ff",heroDark:"#110d1f",
-    icon:`<svg width="20" height="20" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="#5b21f5" stroke-width="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="#5b21f5" stroke-width="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="#5b21f5" stroke-width="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="#5b21f5" stroke-width="1.5"/></svg>`},
-  plat:{name:"Platform & Initiatives",desc:"Special products, infrastructure & cross-product programmes",
-    heroLight:"#fff7ed",heroDark:"#1a1208",
-    icon:`<svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M8 1l2 4h4l-3 3 1 4-4-2-4 2 1-4-3-3h4z" stroke="#b45309" stroke-width="1.4" stroke-linejoin="round"/></svg>`}
+  pv:{name:"Piggyvest",desc:"Consumer savings & investments",heroLight:"#eff6ff",heroDark:"#0d1520",icon:`<svg width="20" height="20" viewBox="0 0 16 16" fill="none"><rect x="1" y="4" width="14" height="10" rx="2" stroke="#2563eb" stroke-width="1.5"/><path d="M5 4V3a2 2 0 0 1 4 0v1" stroke="#2563eb" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="9" r="1.5" fill="#2563eb"/></svg>`},
+  pa:{name:"PocketApp",desc:"Consumer payments app",heroLight:"#f5f3ff",heroDark:"#130f20",icon:`<svg width="20" height="20" viewBox="0 0 16 16" fill="none"><rect x="3.5" y="1" width="9" height="14" rx="2" stroke="#7c3aed" stroke-width="1.5"/><circle cx="8" cy="12" r="1" fill="#7c3aed"/><path d="M6 3.5h4" stroke="#7c3aed" stroke-width="1.5" stroke-linecap="round"/></svg>`},
+  pvb:{name:"Piggyvest Business",desc:"Business banking dashboard",heroLight:"#f0fdf4",heroDark:"#0a1a12",icon:`<svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M8 1.5L14.5 5v6L8 14.5 1.5 11V5Z" stroke="#0d7c66" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 5.5v5M5.5 7l2.5 1.5L10.5 7" stroke="#0d7c66" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>`},
+  pmd:{name:"Pocket Merchant",desc:"API-first merchant payments platform",heroLight:"#f5f3ff",heroDark:"#110d1f",icon:`<svg width="20" height="20" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="#5b21f5" stroke-width="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="#5b21f5" stroke-width="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="#5b21f5" stroke-width="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="#5b21f5" stroke-width="1.5"/></svg>`},
+  plat:{name:"Platform & Initiatives",desc:"Special products, infrastructure & cross-product programmes",heroLight:"#fff7ed",heroDark:"#1a1208",icon:`<svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M8 1l2 4h4l-3 3 1 4-4-2-4 2 1-4-3-3h4z" stroke="#b45309" stroke-width="1.4" stroke-linejoin="round"/></svg>`}
 };
 
 const SL={done:"Done",indev:"In development",scoping:"Scoping & design",notstarted:"Not started",blocked:"Blocked"};
@@ -316,18 +298,17 @@ const SC={done:"sp-done",indev:"sp-indev",scoping:"sp-scoping",notstarted:"sp-no
 const BC={done:"bar-done",indev:"bar-indev",scoping:"bar-scoping",notstarted:"bar-notstarted",blocked:"bar-blocked"};
 const PC={critical:"pr-critical",high:"pr-high",medium:"pr-medium",low:"pr-low"};
 const PL={critical:"Critical",high:"High",medium:"Medium",low:"Low"};
-const TINT={done:"tint-done",blocked:"tint-blocked"};
 
 const DATA={
   pv:{
     h1:[
-      {t:"Walkathon",team:"Marketing",p:"high",s:"indev",d:"Internal step challenge with 6 branded houses, daily goals, and prize tiers. Public launch pending Piggy Points conversion logic.",summary:"A 25-day internal step challenge built into the Piggyvest app, structured around 6 branded houses. Rewards users for daily 10,000-step goals with Piggy Points and cash prizes.",assumptions:["Apple Health (iOS) and Health Connect (Android) are the approved step tracking sources — not Google Fit","Manual step entry exploit has been resolved via source-level metadata filtering","Piggy Points conversion logic is reserved for the public launch phase"],risks:["Public launch timing depends on Piggy Points infrastructure being ready","House assignment logic for public users not yet defined"],questions:[]},
-      {t:"WHT Automation",team:"Accounting",p:"critical",s:"indev",d:"Automated deduction of Withholding Tax from specific transaction types including investment interest.",summary:"Automated system to deduct Withholding Tax from applicable transaction types across Piggyvest, PocketApp, and PVB — replacing manual reconciliation.",assumptions:["Applies to investment interest and select transaction types","Regulatory requirement with no optionality"],risks:["Cross-product dependency — PV, Pocket, and PVB all affected","Any delay impacts compliance posture"],questions:[]},
-      {t:"Mutual Funds & Managed Portfolio",team:"Treasury",p:"critical",s:"notstarted",d:"ARM-first mutual fund marketplace and managed portfolio experience. Users browse and invest in curated funds or delegate allocation via a risk profile.",summary:"Two complementary investment products built under one unified experience: (1) a mutual fund marketplace where users browse and invest in curated ARM funds, and (2) a managed portfolio product where users complete a risk profile and are allocated automatically. ARM is the MVP partner. Chapel Hill Denham and RiseVest to follow.",assumptions:["ARM is the launch partner — single integration for MVP","Architecture must support both white-label marketplace and pooled fund models","Managed portfolio and marketplace coexist as a unified investment experience","Investment Wallet serves as the central hub for all fund transactions","PRD update required before development resumes"],risks:["Engineering resourcing needs explicit unblocking decision","Pooled fund vs. white-label model decision still open at commercial level","Digital Sub Broker licence may be required for full distribution rights"],questions:["Is the pooled fund vs. white-label decision to be made before or after ARM commercial agreement?","What are ARM's precise settlement timelines per fund type?","Does Piggyvest earn a commission from AMCs or charge a platform fee?"],notion:"https://www.notion.so/piggytechprod/Mutual-Fund-Marketplace-Piggyvest-23f31b30e92e8086b13afa16ccec95c6"},
+      {t:"Walkathon",team:"Marketing",p:"high",s:"indev",d:"Internal step challenge with 6 branded houses, daily goals, and prize tiers. Public launch pending Piggy Points conversion logic.",summary:"A 25-day internal step challenge built into the Piggyvest app, structured around 6 branded houses. Rewards users for daily 10,000-step goals.",assumptions:["Apple Health (iOS) and Health Connect (Android) are the approved step tracking sources — not Google Fit","Piggy Points conversion logic is reserved for the public launch phase"],risks:["Public launch timing depends on Piggy Points infrastructure being ready"],questions:[]},
+      {t:"WHT Automation",team:"Accounting",p:"critical",s:"indev",d:"Automated deduction of Withholding Tax from specific transaction types including investment interest.",summary:"Automated system to deduct WHT from applicable transaction types across Piggyvest, PocketApp, and PVB.",assumptions:["Regulatory requirement with no optionality"],risks:["Cross-product dependency — PV, Pocket, and PVB all affected"],questions:[]},
+      {t:"Mutual Funds & Managed Portfolio",team:"Treasury",p:"critical",s:"notstarted",d:"ARM-first mutual fund marketplace and managed portfolio experience. Users browse and invest in curated funds or delegate allocation via a risk profile.",summary:"Two complementary investment products: (1) a mutual fund marketplace where users browse and invest in curated ARM funds, and (2) a managed portfolio product where users complete a risk profile and are allocated automatically. ARM is the MVP partner.",assumptions:["ARM is the launch partner — single integration for MVP","Architecture must support both white-label marketplace and pooled fund models","Investment Wallet serves as the central hub for all fund transactions","PRD update required before development resumes"],risks:["Engineering resourcing needs explicit unblocking decision","Pooled fund vs. white-label model decision still open at commercial level","Digital Sub Broker licence may be required for full distribution rights"],questions:["Is the pooled fund vs. white-label decision to be made before or after ARM commercial agreement?","What are ARM's precise settlement timelines per fund type?","Does Piggyvest earn a commission from AMCs or charge a platform fee?"],notion:"https://www.notion.so/piggytechprod/Mutual-Fund-Marketplace-Piggyvest-23f31b30e92e8086b13afa16ccec95c6"},
       {t:"Flutterwave card system",team:"Management",p:"high",s:"indev",d:"Integration of Flutterwave as a processor/switch for adding and charging user cards.",summary:"",assumptions:[],risks:[],questions:[]},
       {t:"Sanctions screening",team:"Compliance",p:"high",s:"done",d:"Integration with Regfyl to screen users against global sanction lists (OFAC, UN).",summary:"",assumptions:[],risks:[],questions:[]},
       {t:"Investify redesign & rebuild",team:"Treasury",p:"high",s:"indev",d:"Full UI and backend rebuild. Architecture flexible enough for mutual funds, stocks, and managed portfolios.",summary:"",assumptions:[],risks:[],questions:[]},
-      {t:"Get It",team:"Product",p:"high",s:"done",d:"Save-now-pay-later feature. Management direction: spin out from core slate, narrow catalogue, update UI, schedule 3-month review.",summary:"Management direction: reposition Get It as a more independent, focused product. Narrow the catalogue, update UI, and deprioritise its placement on the main app page.",assumptions:["Catalogue narrowing and repositioning is follow-on work — the MVP feature is done","3-month check-in to be scheduled post-repositioning"],risks:["Follow-on repositioning work not yet scoped or assigned"],questions:["What is the timeline for the catalogue narrowing and UI update?"]},
+      {t:"Get It",team:"Product",p:"high",s:"done",d:"Save-now-pay-later feature. Management direction: spin out from core slate, narrow catalogue, update UI, schedule 3-month review.",summary:"Management direction: reposition Get It as a more independent, focused product. Narrow the catalogue, update UI, and deprioritise its placement on the main app page.",assumptions:["3-month check-in to be scheduled post-repositioning"],risks:["Follow-on repositioning work not yet scoped or assigned"],questions:["What is the timeline for the catalogue narrowing and UI update?"]},
       {t:"Stocks & equity (Trove)",team:"Treasury",p:"high",s:"indev",d:"Self-directed stock and equity trading via Trove integration.",summary:"",assumptions:[],risks:[],questions:[]},
       {t:"Flex Dollar VAN — Paystack",team:"Payment Ops",p:"high",s:"scoping",d:"USD Virtual Account feature for users to fund their Flex Dollar wallets via SWIFT transfers.",summary:"",assumptions:[],risks:[],questions:[]},
       {t:"Flex Dollar KYC v2",team:"Payment Ops",p:"high",s:"scoping",d:"Automating the Flex Dollar VAN approval workflow with ID verification and bulk processing.",summary:"",assumptions:[],risks:[],questions:[]},
@@ -340,9 +321,9 @@ const DATA={
       {t:"H1 2026 WAEC Report",team:"Marketing",p:"high",s:"notstarted",d:"Bi-annual user report. Hard launch deadline: July 1, 2026.",summary:"",assumptions:[],risks:[],questions:[]},
     ],
     h2:[
-      {t:"Mutual Funds expansion — Phase 2",team:"Treasury",p:"high",s:"notstarted",d:"Expanding to Chapel Hill Denham and RiseVest following ARM MVP launch.",summary:"",assumptions:["ARM MVP must be live before Phase 2 partner onboarding begins"],risks:["Partner API readiness and commercial negotiations may delay timeline"],questions:[]},
-      {t:"Islamic Finance",team:"Product",p:"medium",s:"notstarted",d:"Sharia-compliant savings and investment products. Scope and partner not yet defined.",summary:"Strategic initiative to offer Islamic Finance products to Piggyvest's Muslim user base.",assumptions:["Requires a Sharia-compliant partner or advisory board","Distinct product architecture from conventional savings/investment features"],risks:["Regulatory complexity — limited SEC/CBN precedent for Islamic Finance in Nigerian fintechs"],questions:["Who is the preferred Sharia advisory or licensing partner?","Which product to lead with — savings or investments?"]},
-      {t:"Overdraft & Credit Line",team:"Product",p:"medium",s:"notstarted",d:"Personal overdraft and credit line product. Scope, partner, and credit model not yet defined.",summary:"Consumer credit product extending overdraft or revolving credit to Piggyvest users.",assumptions:["Will require MFB licence or a licensed lending partner","Likely leverages existing savings behaviour as a credit signal"],risks:["Requires MFB or consumer credit licence","Credit risk model needs to be defined before scoping"],questions:["Is this a Piggyvest-owned product or partner-powered?","What credit signals will be used for underwriting?"]},
+      {t:"Mutual Funds expansion — Phase 2",team:"Treasury",p:"high",s:"notstarted",d:"Expanding to Chapel Hill Denham and RiseVest following ARM MVP launch.",summary:"",assumptions:["ARM MVP must be live before Phase 2 partner onboarding begins"],risks:[],questions:[]},
+      {t:"Islamic Finance",team:"Product",p:"medium",s:"notstarted",d:"Sharia-compliant savings and investment products. Scope and partner not yet defined.",summary:"Strategic initiative to offer Islamic Finance products to Piggyvest's Muslim user base.",assumptions:["Requires a Sharia-compliant partner or advisory board"],risks:["Regulatory complexity — limited SEC/CBN precedent for Islamic Finance in Nigerian fintechs"],questions:["Who is the preferred Sharia advisory or licensing partner?","Which product to lead with — savings or investments?"]},
+      {t:"Overdraft & Credit Line",team:"Product",p:"medium",s:"notstarted",d:"Personal overdraft and credit line product. Scope, partner, and credit model not yet defined.",summary:"Consumer credit product extending overdraft or revolving credit to Piggyvest users.",assumptions:["Will require MFB licence or a licensed lending partner"],risks:["Requires MFB or consumer credit licence","Credit risk model needs to be defined before scoping"],questions:["Is this a Piggyvest-owned product or partner-powered?"]},
       {t:"Piggyvest app rebuild",team:"Management",p:"critical",s:"notstarted",d:"Complete visual overhaul — improved UX, modernisation, and navigation.",summary:"",assumptions:[],risks:[],questions:[]},
       {t:"Wallets — Lien",team:"Accounting",p:"medium",s:"notstarted",d:"Admin capability to place a lien on specific funds or wallets.",summary:"",assumptions:[],risks:[],questions:[]},
       {t:"Wallets — Double entry",team:"Accounting",p:"medium",s:"notstarted",d:"Implementing a double-entry accounting system for wallets.",summary:"",assumptions:[],risks:[],questions:[]},
@@ -352,7 +333,7 @@ const DATA={
   },
   pa:{
     h1:[
-      {t:"WHT Automation",team:"Accounting",p:"critical",s:"done",d:"Automated deduction of Withholding Tax on Pocket.",summary:"",assumptions:[],risks:[],questions:[]},
+      {t:"WHT Automation",team:"Accounting",p:"critical",s:"done",d:"Automated WHT deduction on Pocket.",summary:"",assumptions:[],risks:[],questions:[]},
       {t:"Pocket App rebuild",team:"Management",p:"critical",s:"indev",d:"Complete visual overhaul. Immediate priority — goal is a polished, market-ready product.",summary:"",assumptions:[],risks:[],questions:[]},
       {t:"TypeScript backend rebuild",team:"Engineering",p:"medium",s:"indev",d:"Rebuild of Pocket's core backend in TypeScript.",summary:"",assumptions:[],risks:[],questions:[]},
       {t:"Microsoft Clarity integration",team:"Product",p:"high",s:"done",d:"Integration of Clarity for user behaviour tracking and analytics.",summary:"",assumptions:[],risks:[],questions:[]},
@@ -361,7 +342,7 @@ const DATA={
       {t:"Airtel SmartCash integration",team:"Partnership",p:"medium",s:"done",d:"Integration with Airtel Smartcash for data and airtime purchases.",summary:"",assumptions:[],risks:[],questions:[]},
     ],
     h2:[
-      {t:"Pocket Pop-Up",team:"Product",p:"medium",s:"notstarted",d:"Pop-up feature within PocketApp. Scope not yet defined.",summary:"Strategic initiative flagged by management. Product scope, UX, and use case not yet defined.",assumptions:["Likely a contextual in-app prompt for a specific user action or product discovery moment"],risks:["Undefined scope — needs discovery before roadmap commitment"],questions:["What is the intended use case?","Is this a payments prompt, savings nudge, or product discovery tool?"]},
+      {t:"Pocket Pop-Up",team:"Product",p:"medium",s:"notstarted",d:"Pop-up feature within PocketApp. Scope not yet defined.",summary:"Strategic initiative flagged by management. Product scope, UX, and use case not yet defined.",assumptions:["Likely a contextual in-app prompt for a specific user action or product discovery moment"],risks:["Undefined scope — needs discovery before roadmap commitment"],questions:["What is the intended use case?"]},
       {t:"CTR GoAML filing automation",team:"Compliance",p:"medium",s:"notstarted",d:"Automate filing of Currency Transaction Reports to GoAML/NFIU.",summary:"",assumptions:[],risks:[],questions:[]},
       {t:"NIBSS infrastructure migration",team:"Payment Ops",p:"high",s:"notstarted",d:"Migrating inflow and outflow processes from Paystack to Assuredly.",summary:"",assumptions:[],risks:[],questions:[]},
       {t:"MyBank statement integration",team:"Partnership",p:"low",s:"notstarted",d:"Integration for Statements of Account via MyBank.",summary:"",assumptions:[],risks:[],questions:[]},
@@ -409,36 +390,68 @@ const DATA={
   },
   plat:{
     h1:[
-      {t:"Piggyvest Kids App v1",team:"Management",p:"critical",s:"indev",d:"Parent-managed child finance app adapting Safelock and Target features. With landing page and admin dashboard.",summary:"",assumptions:[],risks:[],questions:[]},
-      {t:"Salary Manager App v1",team:"Management",p:"critical",s:"indev",d:"v1 app for salary earners — budgets, expenses, analytics. With landing page and admin dashboard.",summary:"",assumptions:[],risks:[],questions:[]},
+      {t:"Piggyvest Kids App v1",team:"Management",p:"critical",s:"indev",d:"Parent-managed child finance app adapting Safelock and Target features.",summary:"",assumptions:[],risks:[],questions:[]},
+      {t:"Salary Manager App v1",team:"Management",p:"critical",s:"indev",d:"v1 app for salary earners — budgets, expenses, analytics.",summary:"",assumptions:[],risks:[],questions:[]},
       {t:"FaaS — centralised ledger revamp",team:"Engineering",p:"high",s:"scoping",d:"MySQL migration, P2P/NIP redesign, TSQ optimisation, and worker service decoupling.",summary:"",assumptions:[],risks:[],questions:[]},
-      {t:"FraudBot",team:"Fraud",p:"high",s:"indev",d:"Slack-based ops tool — BVN/NIN lookup, account flagging, watchlisting, statement generation, transaction checks.",summary:"Internal Slack bot consolidating fraud and compliance operations across Piggyvest and PocketApp. Eight core capabilities including BVN/NIN lookup, watchlisting (CBN-mandated), and statement generation.",assumptions:["BVN and NIN lookup elevated to Tier 3 — Head/C-level access only","Watchlisting operates at BVN level per CBN mandate","Individual DMs preferred over shared channels for sensitive actions"],risks:["Engineering validation with Azeez still pending — API availability not confirmed","Access tier decisions need formal sign-off before launch"],questions:["Has Azeez confirmed API availability for all 8 capabilities?","What is the rollout plan — internal beta or direct to all fraud/ops teams?"],notion:"https://www.notion.so/piggytechprod/Fraud-Ops-Slack_Bot-30b31b30e92e8077b0e2ed131ce32d50"},
-      {t:"Pocket Infrastructure — Standalone product",team:"Product",p:"high",s:"notstarted",d:"Packaging Pocket's infrastructure as a standalone B2B product for commercial sale.",summary:"Strategic initiative to position and sell Pocket's payments infrastructure independently of the consumer app. Distinct from Pocket Merchant.",assumptions:["Separate objective from the Pocket Merchant Dashboard","Requires dedicated GTM and commercial strategy"],risks:["Undefined scope — needs discovery before roadmap commitment","Risk of cannibalising Pocket Merchant positioning if not differentiated"],questions:["What is the ICP for this standalone infrastructure product?","How does it differentiate from Pocket Merchant in positioning?"]},
-      {t:"License audit",team:"Compliance",p:"critical",s:"indev",d:"Full audit of all Piggytech group licences. Immediate: CMHC, PSSP, and Digital Sub Broker.",summary:"Full audit of all licences held or pending across Piggytech. Three to pursue immediately: CMHC, PSSP, and Digital Sub Broker. The Digital Sub Broker licence directly enables mutual fund distribution and IPO participation including the Dangote IPO.",assumptions:["Digital Sub Broker licence is the path to distributing investment products without a Fund Manager licence","CMHC and PSSP unlock specific product and payment capabilities"],risks:["Dangote IPO opportunity is time-sensitive — licence must be in place before the IPO window opens","Regulatory approval timelines are unpredictable"],questions:["What is the current status of each licence application?","Does the Dangote IPO timeline create a hard deadline for the Digital Sub Broker licence?"]},
+      {t:"FraudBot",team:"Fraud",p:"high",s:"indev",d:"Slack-based ops tool — BVN/NIN lookup, account flagging, watchlisting, statement generation, transaction checks.",summary:"Internal Slack bot consolidating fraud and compliance operations across Piggyvest and PocketApp. Eight core capabilities including BVN/NIN lookup, watchlisting (CBN-mandated), and statement generation.",assumptions:["BVN and NIN lookup elevated to Tier 3 — Head/C-level access only","Watchlisting operates at BVN level per CBN mandate"],risks:["Engineering validation with Azeez still pending — API availability not confirmed"],questions:["Has Azeez confirmed API availability for all 8 capabilities?"],notion:"https://www.notion.so/piggytechprod/Fraud-Ops-Slack_Bot-30b31b30e92e8077b0e2ed131ce32d50"},
+      {t:"Pocket Infrastructure — Standalone",team:"Product",p:"high",s:"notstarted",d:"Packaging Pocket's infrastructure as a standalone B2B product for commercial sale.",summary:"Strategic initiative to position and sell Pocket's payments infrastructure independently of the consumer app.",assumptions:["Requires dedicated GTM and commercial strategy"],risks:["Risk of cannibalising Pocket Merchant positioning if not differentiated"],questions:["What is the ICP for this standalone infrastructure product?"]},
+      {t:"License audit",team:"Compliance",p:"critical",s:"indev",d:"Full audit of all Piggytech group licences. Immediate: CMHC, PSSP, and Digital Sub Broker.",summary:"Full audit of all licences held or pending across Piggytech. Three to pursue immediately: CMHC, PSSP, and Digital Sub Broker. The Digital Sub Broker licence directly enables mutual fund distribution and IPO participation.",assumptions:["Digital Sub Broker licence is the path to distributing investment products without a Fund Manager licence"],risks:["Dangote IPO opportunity is time-sensitive — licence must be in place before the IPO window opens"],questions:["What is the current status of each licence application?"]},
     ],
     h2:[
       {t:"Automated fraud incident tracker",team:"Fraud",p:"high",s:"notstarted",d:"Migrating fraud tracking from Google Sheets to an automated system across all products.",summary:"",assumptions:[],risks:[],questions:[]},
       {t:"AI-driven fraud management",team:"Fraud",p:"high",s:"notstarted",d:"Adaptive AI/ML solution to detect unusual behaviour and improve enterprise risk responsiveness.",summary:"",assumptions:[],risks:[],questions:[]},
-      {t:"Stablecoins as a payment method",team:"Product",p:"high",s:"notstarted",d:"Phased USDC/USDT integration — Flex Dollar top-up via Graph (Phase 1), NGN pay-in via Quidax (Phase 2). UK expansion entry angle.",summary:"Phased integration of stablecoins as a native funding method. Three use cases: Flex Dollar top-up (Phase 1, Graph), NGN wallet funding (Phase 2, Quidax), and diaspora remittance inbound (Phase 2). Also the primary entry angle for UK expansion.",assumptions:["Graph is the Phase 1 provider — extends existing Flex Dollar infrastructure","Piggyvest never holds or custodies crypto — licensed provider is the service provider of record","Co-branding with Quidax is required per compliance — white-label not permissible"],risks:["CBN AML/CFT VASP supervision pilot signals increasing regulatory scrutiny","Compliance sign-off required before any technical scoping begins","Five outstanding compliance questions on Quidax unresolved"],questions:["Has compliance confirmed the Graph extension falls within existing Flex Dollar regulatory scope?","What is the acceptable scope of user data sharing with Quidax?"],notion:"https://www.notion.so/piggytechprod/Piggyvest-Stablecoins-as-a-Payment-Method-33631b30e92e817384add570056d2bfd"},
-      {t:"South Africa expansion",team:"Management",p:"high",s:"notstarted",d:"Primary expansion market. Entry partners under evaluation: SAVA and Moment.",summary:"Partnership-led entry using local licensed infrastructure — SAVA (savings) and Moment (BaaS) — rather than direct FSCA licence application. Savings product leads.",assumptions:["Entry via local licensed partners, not direct FSCA licence application","Savings product leads — investment products are harder due to FSCA rules"],risks:["FSCA is materially stricter than Nigeria's SEC","Partner negotiations with SAVA and Moment not yet initiated"],questions:["Have initial conversations with SAVA and Moment been started?","Which Piggyvest product leads the South Africa entry?"]},
-      {t:"UK expansion",team:"Management",p:"high",s:"notstarted",d:"Primary expansion market. Entry angle: stablecoins and remittances targeting Nigerian diaspora.",summary:"UK expansion targets the Nigerian diaspora corridor. Entry via stablecoins and remittances — not deposit-taking. FCA crypto asset registration is the regulatory path.",assumptions:["Stablecoin infrastructure must be live before UK entry is viable","Piggyvest's 5M Nigerian users are the receiving end — no new product needed on that side"],risks:["Entirely dependent on stablecoins feature being live — currently H2 2026","FCA registration timeline adds uncertainty"],questions:["Is there a target UK launch date, or is it contingent on stablecoins going live?"]},
-      {t:"PFA / Pension — Chapel Hill Denham",team:"Product",p:"medium",s:"notstarted",d:"Pension fund administrator partnership. Read-only RSA balance view first, then contribution top-ups.",summary:"Embed pension management inside Piggyvest. Users link RSA and view pension balance in-app. Chapel Hill Denham is the preferred partner.",assumptions:["PenCom (not SEC) is the regulatory body — separate regulatory relationship required","Read-only balance view is the MVP"],risks:["PenCom approval process is slow","2027 horizon at earliest"],questions:["Has Chapel Hill Denham been engaged on the pension partnership separately from mutual funds?"]},
-      {t:"Insurance — Car (Mansard)",team:"Product",p:"medium",s:"notstarted",d:"Car insurance as entry point. Preferred partner: AXA Mansard. Commission-based distribution model.",summary:"Piggyvest acts as distribution channel — not underwriter. AXA Mansard handles underwriting and claims. Build for extensibility — health, device, and life insurance to follow.",assumptions:["Distribution model only — Piggyvest does not underwrite","Build with extensibility in mind — one infrastructure layer, multiple products"],risks:["Mansard partnership not yet confirmed","New product category — no existing insurance infrastructure in the stack"],questions:["Has Mansard confirmed the partnership and commercial terms?","How will claims be handled?"]},
-      {t:"HNI Portfolio",team:"Product",p:"medium",s:"notstarted",d:"Intentional approach to the high-net-worth segment. Dedicated salespeople and higher-touch service layer.",summary:"Go-to-market and product initiative for HNI users. Managed Portfolio and Mutual Funds form the product foundation — HNI discovery should run in parallel with those launches.",assumptions:["Managed Portfolio and Mutual Funds are the product foundation","HNI users will surface product gaps quickly — statements, tax reporting, minimum yield guarantees"],risks:["HNI requirements not captured yet","Hiring dedicated salespeople is a People Ops dependency"],questions:["What AUM threshold defines an HNI user on Piggyvest?"]},
-      {t:"Dangote IPO / NGX positioning",team:"Product",p:"high",s:"notstarted",d:"Enable Piggyvest users to participate in the Dangote IPO via NGX partnership. Requires Digital Sub Broker licence.",summary:"Time-sensitive opportunity. If Piggyvest can enable 5M users to participate in the Dangote IPO at small ticket sizes, it's a major product and marketing moment. Digital Sub Broker licence is a hard prerequisite.",assumptions:["Digital Sub Broker licence must be in place before the IPO window opens","NGX partnership needs to be formalised"],risks:["IPO timeline is uncertain — if it happens before the licence is in place, the moment is lost","NGX commercial agreement not yet initiated"],questions:["What is the current Dangote IPO timeline estimate?","Is the Digital Sub Broker licence application already in progress?"]},
+      {t:"Stablecoins as a payment method",team:"Product",p:"high",s:"notstarted",d:"Phased USDC/USDT integration — Flex Dollar top-up via Graph (Phase 1), NGN pay-in via Quidax (Phase 2). UK expansion entry angle.",summary:"Phased integration of stablecoins as a native funding method. Three use cases: Flex Dollar top-up (Phase 1), NGN wallet funding (Phase 2), and diaspora remittance inbound (Phase 2). Also the primary entry angle for UK expansion.",assumptions:["Graph is the Phase 1 provider — extends existing Flex Dollar infrastructure","Piggyvest never holds or custodies crypto — licensed provider is the service provider of record"],risks:["CBN AML/CFT VASP supervision pilot signals increasing regulatory scrutiny","Compliance sign-off required before any technical scoping begins"],questions:["Has compliance confirmed the Graph extension falls within existing Flex Dollar regulatory scope?"],notion:"https://www.notion.so/piggytechprod/Piggyvest-Stablecoins-as-a-Payment-Method-33631b30e92e817384add570056d2bfd"},
+      {t:"South Africa expansion",team:"Management",p:"high",s:"notstarted",d:"Primary expansion market. Entry partners: SAVA and Moment.",summary:"Partnership-led entry using local licensed infrastructure — SAVA and Moment — rather than direct FSCA licence application.",assumptions:["Entry via local licensed partners, not direct FSCA licence"],risks:["Partner negotiations with SAVA and Moment not yet initiated"],questions:["Have initial conversations with SAVA and Moment been started?"]},
+      {t:"UK expansion",team:"Management",p:"high",s:"notstarted",d:"Primary expansion market. Entry angle: stablecoins and remittances targeting Nigerian diaspora.",summary:"UK expansion targets the Nigerian diaspora corridor. Entry via stablecoins and remittances — not deposit-taking.",assumptions:["Stablecoin infrastructure must be live before UK entry is viable"],risks:["Entirely dependent on stablecoins feature being live — currently H2 2026"],questions:["Is there a target UK launch date?"]},
+      {t:"PFA / Pension — Chapel Hill Denham",team:"Product",p:"medium",s:"notstarted",d:"Pension fund administrator partnership. Read-only RSA balance view first, then contribution top-ups.",summary:"Embed pension management inside Piggyvest. Chapel Hill Denham is the preferred partner.",assumptions:["PenCom (not SEC) is the regulatory body","Read-only balance view is the MVP"],risks:["PenCom approval process is slow — 2027 horizon at earliest"],questions:["Has Chapel Hill Denham been engaged on the pension partnership separately from mutual funds?"]},
+      {t:"Insurance — Car (Mansard)",team:"Product",p:"medium",s:"notstarted",d:"Car insurance as entry point. Preferred partner: AXA Mansard. Commission-based distribution.",summary:"Piggyvest acts as distribution channel only. AXA Mansard handles underwriting and claims. Build for extensibility.",assumptions:["Distribution model only — Piggyvest does not underwrite","Build with extensibility in mind"],risks:["Mansard partnership not yet confirmed"],questions:["Has Mansard confirmed the partnership and commercial terms?"]},
+      {t:"HNI Portfolio",team:"Product",p:"medium",s:"notstarted",d:"Intentional approach to the high-net-worth segment. Dedicated salespeople and higher-touch service layer.",summary:"Go-to-market and product initiative for HNI users. Managed Portfolio and Mutual Funds form the product foundation.",assumptions:["Managed Portfolio and Mutual Funds are the product foundation"],risks:["HNI requirements not captured yet"],questions:["What AUM threshold defines an HNI user on Piggyvest?"]},
+      {t:"Dangote IPO / NGX positioning",team:"Product",p:"high",s:"notstarted",d:"Enable Piggyvest users to participate in the Dangote IPO via NGX partnership. Requires Digital Sub Broker licence.",summary:"Time-sensitive opportunity. Digital Sub Broker licence is a hard prerequisite. If the IPO happens before the licence is in place, the moment is lost.",assumptions:["Digital Sub Broker licence must be in place before the IPO window opens"],risks:["IPO timeline is uncertain","NGX commercial agreement not yet initiated"],questions:["What is the current Dangote IPO timeline estimate?","Is the Digital Sub Broker licence application already in progress?"]},
     ]
   }
 };
 
-let activeTab="pv", isDark=false;
+let activeTab="pv", isDark=false, pwVisible=false;
+
+function togglePw(){
+  pwVisible=!pwVisible;
+  const inp=document.getElementById("gate-pw");
+  const ico=document.getElementById("eye-icon");
+  inp.type=pwVisible?"text":"password";
+  ico.innerHTML=pwVisible
+    ?`<path d="M2 2l12 12M6.5 6.6A2 2 0 0 0 9.4 9.5M1 8s2.5-5 7-5c1.1 0 2.1.3 3 .7M15 8s-.9 1.8-2.5 3.2M5.5 12.5C6.3 12.8 7.1 13 8 13c4.5 0 7-5 7-5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>`
+    :`<path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.3"/>`;
+}
+
+function checkPw(){
+  const val=document.getElementById("gate-pw").value;
+  const err=document.getElementById("gate-err");
+  const inp=document.getElementById("gate-pw");
+  if(val==="piggyadmin26"){
+    const gate=document.getElementById("gate");
+    gate.style.opacity="0";
+    setTimeout(()=>{
+      gate.style.display="none";
+      const root=document.getElementById("root");
+      root.style.display="block";
+      Object.keys(DATA).forEach(buildPanel);
+    },300);
+  } else {
+    err.classList.add("show");
+    inp.classList.add("shake");
+    inp.value="";
+    setTimeout(()=>inp.classList.remove("shake"),400);
+    inp.focus();
+  }
+}
 
 function toggleTheme(){
   isDark=!isDark;
   const root=document.getElementById("root");
-  const gate=document.getElementById("gate");
   root.setAttribute("data-theme",isDark?"dark":"light");
   document.getElementById("modal").setAttribute("data-theme",isDark?"dark":"light");
   document.getElementById("toggle-lbl").textContent=isDark?"Dark":"Light";
+  const gate=document.getElementById("gate");
   if(isDark)gate.classList.add("dark-gate");
   else gate.classList.remove("dark-gate");
   updateHeroBgs();
@@ -452,7 +465,8 @@ function updateHeroBgs(){
 }
 
 function mkCard(item,idx,prod,half){
-  const sc=item.s, tint=(sc==="done"?"tint-done":sc==="blocked"?"tint-blocked":"");
+  const sc=item.s;
+  const tint=sc==="done"?"tint-done":sc==="blocked"?"tint-blocked":"";
   return `<div class="card ${tint}" data-s="${sc}" onclick="openModal('${prod}','${half}',${idx})">
     <span class="card-bar ${BC[sc]}"></span>
     <div class="card-body">
@@ -508,7 +522,7 @@ function buildPanel(id){
     </div>
     <div class="half-section">
       <div class="half-header"><span class="half-badge h2b">H2 2026</span><span class="count-chip" id="cnt-${id}-h2"></span></div>
-      <div class="grid" id="g-${id}-h2">${h2.length?h2.map((item,i)=>mkCard(item,i,id,"h2")).join(""):`<div class="empty-state">No items for H2 yet</div>`}</div>
+      <div class="grid" id="g-${id}-h2">${h2.length?h2.map((item,i)=>mkCard(item,i,id,"h2")).join(""):`<div class="empty-state">No H2 items yet</div>`}</div>
     </div>`;
   updateCounts(id);
 }
@@ -524,8 +538,7 @@ function updateCounts(id){
 }
 
 function filterStatus(pill,id,val){
-  const ctrl=document.getElementById("ctrl-"+id);
-  ctrl.querySelectorAll(".pill").forEach(p=>p.classList.remove("on"));
+  document.getElementById("ctrl-"+id).querySelectorAll(".pill").forEach(p=>p.classList.remove("on"));
   pill.classList.add("on");
   document.getElementById("panel-"+id).querySelectorAll(".card").forEach(c=>{
     c.style.display=(val==="all"||c.dataset.s===val)?"":"none";
@@ -546,8 +559,7 @@ function openModal(prod,half,idx){
   document.getElementById("m-title").textContent=item.t;
   document.getElementById("m-badges").innerHTML=`<span class="st-pill ${SC[item.s]}">${SL[item.s]}</span><span class="pr-badge ${PC[item.p]}" style="padding:3px 9px;border-radius:20px;font-size:11px">${PL[item.p]}</span><span class="team-tag">${item.team}</span>`;
   let html="";
-  const summary=item.summary||item.d;
-  html+=`<div class="modal-section"><div class="modal-section-title">Summary</div><div class="modal-text">${summary}</div></div>`;
+  html+=`<div class="modal-section"><div class="modal-section-title">Summary</div><div class="modal-text">${item.summary||item.d}</div></div>`;
   if(item.assumptions&&item.assumptions.length)html+=`<div class="modal-section"><div class="modal-section-title">Assumptions</div><ul class="modal-list assumptions">${item.assumptions.map(a=>`<li>${a}</li>`).join("")}</ul></div>`;
   if(item.risks&&item.risks.length)html+=`<div class="modal-section"><div class="modal-section-title">Risks & watch points</div><ul class="modal-list risks">${item.risks.map(r=>`<li>${r}</li>`).join("")}</ul></div>`;
   if(item.questions&&item.questions.length)html+=`<div class="modal-section"><div class="modal-section-title">Open questions</div><ul class="modal-list questions">${item.questions.map(q=>`<li>${q}</li>`).join("")}</ul></div>`;
@@ -567,37 +579,5 @@ function closeModalBg(e){
 }
 
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
-
-let pwVisible=false;
-function togglePw(){
-  pwVisible=!pwVisible;
-  const inp=document.getElementById("gate-pw");
-  const ico=document.getElementById("eye-icon");
-  inp.type=pwVisible?"text":"password";
-  ico.innerHTML=pwVisible
-    ?`<path d="M2 2l12 12M6.5 6.6A2 2 0 0 0 9.4 9.5M1 8s2.5-5 7-5c1.1 0 2.1.3 3 .7M15 8s-.9 1.8-2.5 3.2M5.5 12.5C6.3 12.8 7.1 13 8 13c4.5 0 7-5 7-5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>`
-    :`<path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.3"/>`;
-}
-
-function checkPw(){
-  const val=document.getElementById("gate-pw").value;
-  const err=document.getElementById("gate-err");
-  const inp=document.getElementById("gate-pw");
-  if(val==="piggyadmin26"){
-    const gate=document.getElementById("gate");
-    gate.style.opacity="0";
-    gate.style.transition="opacity .3s";
-    setTimeout(()=>{
-      gate.style.display="none";
-      document.getElementById("root").style.display="block";
-      Object.keys(DATA).forEach(buildPanel);
-    },300);
-  } else {
-    err.classList.add("show");
-    inp.classList.add("shake");
-    inp.value="";
-    setTimeout(()=>inp.classList.remove("shake"),400);
-    inp.focus();
-  }
-}
+document.getElementById("gate-pw").focus();
 </script>
