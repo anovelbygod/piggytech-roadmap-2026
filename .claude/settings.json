@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "lsof -ti:8080 > /dev/null 2>&1 || (cd ~/Desktop/piggytech-roadmap && nohup node server.js > /tmp/roadmap-server.log 2>&1 &)",
+            "statusMessage": "Starting roadmap server…"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Roadmap Admin — Piggytech</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#1a1a1a;min-height:100vh;background:#f2f2ef}
+
+/* ── Gate (identical to index.html) ── */
+#gate{position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#e8f0fe 0%,#f2f2ef 50%,#ede9fe 100%);transition:opacity .3s}
+.gate-box{width:100%;max-width:360px;background:#fff;border:1px solid #e2e2dd;border-radius:14px;padding:32px 28px;text-align:left}
+.gate-icon{width:38px;height:38px;border-radius:10px;background:#eff6ff;border:1px solid #bfdbfe;display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.gate-title{font-size:16px;font-weight:600;color:#1a1a1a;margin-bottom:4px;letter-spacing:-.2px}
+.gate-sub{font-size:12.5px;color:#999;margin-bottom:22px;line-height:1.55}
+.gate-field{position:relative;margin-bottom:12px}
+.gate-input{display:block;width:100%;padding:10px 38px 10px 13px;border-radius:8px;border:1px solid #e2e2dd;background:#fafaf8;color:#1a1a1a;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:13.5px;outline:none;transition:border-color .15s,box-shadow .15s;-webkit-appearance:none}
+.gate-input:focus{border-color:#2563eb;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+.gate-input::placeholder{color:#c4c4bf}
+.gate-input.shake{animation:shake .35s ease}
+.gate-eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);cursor:pointer;color:#c4c4bf;background:none;border:none;padding:0;display:flex;align-items:center;transition:color .12s}
+.gate-eye:hover{color:#888}
+.gate-btn{display:block;width:100%;padding:10px;border-radius:8px;border:none;background:#2563eb;color:#fff;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;transition:background .12s,transform .1s}
+.gate-btn:hover{background:#1d4ed8}
+.gate-btn:active{transform:scale(.98)}
+.gate-error{font-size:12px;color:#ef4444;margin-top:8px;display:none;align-items:center;gap:4px}
+.gate-error.show{display:flex}
+.gate-footer{margin-top:20px;font-size:11px;color:#ccc;text-align:center}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+
+/* ── Admin shell ── */
+#admin{display:none;max-width:1200px;margin:0 auto;padding:32px 20px 80px}
+.admin-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:24px}
+.admin-header-left h1{font-size:20px;font-weight:600;color:#1a1a1a;margin-bottom:3px}
+.admin-header-left p{font-size:12.5px;color:#888}
+.admin-header-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;border:1px solid transparent;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .12s;white-space:nowrap}
+.btn-primary{background:#2563eb;color:#fff;border-color:#2563eb}
+.btn-primary:hover{background:#1d4ed8;border-color:#1d4ed8}
+.btn-ghost{background:#fff;color:#555;border-color:#e2e2dd}
+.btn-ghost:hover{border-color:#999;color:#1a1a1a}
+.btn-danger{background:#fff;color:#dc2626;border-color:#fecaca}
+.btn-danger:hover{background:#fee2e2;border-color:#fca5a5}
+.btn-sm{padding:5px 10px;font-size:12px}
+
+/* Toolbar */
+.toolbar{background:#fff;border:1px solid #e2e2dd;border-radius:10px;padding:14px 16px;margin-bottom:16px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.toolbar-label{font-size:11px;color:#bbb;font-weight:600;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+.f-pill{padding:4px 11px;border-radius:20px;font-size:11.5px;font-weight:500;cursor:pointer;border:1px solid #e2e2dd;background:#fafaf8;color:#888;transition:all .12s;white-space:nowrap;user-select:none}
+.f-pill:hover{border-color:#888;color:#1a1a1a}
+.f-pill.on{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.f-pill.fp-done.on{background:#d1fae5;color:#065f46;border-color:#6ee7b7}
+.f-pill.fp-indev.on{background:#dbeafe;color:#1e40af;border-color:#93c5fd}
+.f-pill.fp-scoping.on{background:#fef9c3;color:#854d0e;border-color:#fde047}
+.f-pill.fp-notstarted.on{background:#f3f4f6;color:#374151;border-color:#d1d5db}
+.f-pill.fp-blocked.on{background:#fee2e2;color:#991b1b;border-color:#fca5a5}
+.toolbar-sep{width:1px;height:18px;background:#e8e8e3;flex-shrink:0}
+
+/* Table */
+.table-wrap{background:#fff;border:1px solid #e2e2dd;border-radius:10px;overflow:hidden}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl thead tr{background:#fafaf8;border-bottom:1px solid #e8e8e3}
+.tbl th{padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+.tbl td{padding:11px 14px;border-bottom:1px solid #f0f0eb;vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:#fafaf8}
+.tbl-title{font-weight:600;color:#1a1a1a;line-height:1.4}
+.tbl-desc{font-size:11.5px;color:#aaa;margin-top:2px;line-height:1.4;max-width:320px}
+.tbl-actions{display:flex;gap:6px;align-items:center;white-space:nowrap}
+
+/* Badges */
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.b-pv{background:#eff6ff;color:#1d4ed8}
+.b-pa{background:#f5f3ff;color:#6d28d9}
+.b-pvb{background:#f0fdf4;color:#15803d}
+.b-pmd{background:#f5f3ff;color:#5b21b6}
+.b-plat{background:#fff7ed;color:#b45309}
+.b-h1{background:#e0f2fe;color:#0369a1}
+.b-h2{background:#ede9fe;color:#6d28d9}
+.b-done{background:#d1fae5;color:#065f46}
+.b-indev{background:#dbeafe;color:#1e40af}
+.b-scoping{background:#fef9c3;color:#854d0e}
+.b-notstarted{background:#f3f4f6;color:#374151}
+.b-blocked{background:#fee2e2;color:#991b1b}
+.b-critical{background:#fee2e2;color:#991b1b}
+.b-high{background:#fef3c7;color:#92400e}
+.b-medium{background:#dbeafe;color:#1e40af}
+.b-low{background:#f3f4f6;color:#6b7280}
+
+.team-tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500;background:#f2f2ef;color:#666}
+.empty-row td{text-align:center;padding:40px 0;color:#bbb;font-size:13px}
+
+/* Stats bar */
+.stats-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.stat-box{background:#fff;border:1px solid #e2e2dd;border-radius:8px;padding:10px 16px;font-size:12px;color:#888;white-space:nowrap}
+.stat-box b{font-size:18px;font-weight:600;color:#1a1a1a;display:block;margin-bottom:1px}
+
+/* ── Modal overlay ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:100;align-items:center;justify-content:center;padding:20px}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:14px;border:1px solid #e2e2dd;width:100%;max-width:620px;max-height:90vh;overflow-y:auto;position:relative}
+.modal-header{padding:20px 22px 16px;border-bottom:1px solid #f0f0eb;position:sticky;top:0;background:#fff;z-index:2;border-radius:14px 14px 0 0}
+.modal-title-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.modal-title{font-size:15px;font-weight:600;color:#1a1a1a}
+.modal-close{width:28px;height:28px;border-radius:8px;border:1px solid #e2e2dd;background:#fafaf8;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;color:#888;transition:background .12s}
+.modal-close:hover{background:#f2f2ef}
+.modal-body{padding:20px 22px 24px}
+
+/* Form */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-full{grid-column:1/-1}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-label{font-size:11px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:.4px}
+.form-input,.form-select,.form-textarea{width:100%;padding:9px 12px;border-radius:8px;border:1px solid #e2e2dd;background:#fafaf8;color:#1a1a1a;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:13.5px;outline:none;transition:border-color .15s,box-shadow .15s;-webkit-appearance:none}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:#2563eb;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+.form-input::placeholder,.form-textarea::placeholder{color:#c4c4bf}
+.form-textarea{resize:vertical;min-height:72px;line-height:1.55}
+.form-hint{font-size:11px;color:#bbb;margin-top:1px}
+.form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid #f0f0eb}
+
+/* Delete confirm */
+.confirm-modal .modal{max-width:400px}
+.confirm-body{padding:24px 22px}
+.confirm-body p{font-size:13.5px;color:#555;line-height:1.6;margin-bottom:20px}
+.confirm-body strong{color:#1a1a1a}
+.confirm-actions{display:flex;gap:8px;justify-content:flex-end}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;z-index:999;background:#1a1a1a;color:#f0f0ec;font-size:12.5px;font-weight:500;padding:10px 16px;border-radius:8px;opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+
+@media(max-width:640px){.form-grid{grid-template-columns:1fr}.admin-header{flex-direction:column;align-items:flex-start}.stats-bar{display:grid;grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<!-- Gate -->
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-icon">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M3 7V5a5 5 0 0 1 10 0v2"/><rect x="1" y="7" width="14" height="8" rx="2" stroke="#2563eb" stroke-width="1.5"/><circle cx="8" cy="11" r="1.5" fill="#2563eb"/></svg>
+    </div>
+    <div class="gate-title">Roadmap Admin</div>
+    <div class="gate-sub">Piggytech internal use only. Changes are saved locally in your browser.</div>
+    <div class="gate-field">
+      <input class="gate-input" id="gate-pw" type="password" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')checkPw()">
+      <button class="gate-eye" onclick="togglePw()" tabindex="-1">
+        <svg id="eye-icon" width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.3"/></svg>
+      </button>
+    </div>
+    <button class="gate-btn" onclick="checkPw()">Continue</button>
+    <div class="gate-error" id="gate-err">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v4M8 11v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Incorrect password.
+    </div>
+    <div class="gate-footer">Piggytech Global Limited · Confidential</div>
+  </div>
+</div>
+
+<!-- Admin -->
+<div id="admin">
+  <div class="admin-header">
+    <div class="admin-header-left">
+      <h1>Roadmap admin</h1>
+      <p>Piggytech 2026 · Changes saved to browser storage · <a href="index.html" style="color:#2563eb;text-decoration:none">View roadmap →</a></p>
+    </div>
+    <div class="admin-header-right">
+      <button class="btn btn-ghost" onclick="confirmReset()">Reset to defaults</button>
+      <button class="btn btn-primary" onclick="openForm()">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Add item
+      </button>
+    </div>
+  </div>
+
+  <div class="stats-bar" id="stats-bar"></div>
+
+  <div class="toolbar">
+    <span class="toolbar-label">Product</span>
+    <span class="f-pill on" data-filter-prod="all" onclick="setFilter('prod','all',this)">All</span>
+    <span class="f-pill" data-filter-prod="pv" onclick="setFilter('prod','pv',this)">Piggyvest</span>
+    <span class="f-pill" data-filter-prod="pa" onclick="setFilter('prod','pa',this)">PocketApp</span>
+    <span class="f-pill" data-filter-prod="pvb" onclick="setFilter('prod','pvb',this)">PVB</span>
+    <span class="f-pill" data-filter-prod="pmd" onclick="setFilter('prod','pmd',this)">Pocket Merchant</span>
+    <span class="f-pill" data-filter-prod="plat" onclick="setFilter('prod','plat',this)">Platform</span>
+    <span class="toolbar-sep"></span>
+    <span class="toolbar-label">Status</span>
+    <span class="f-pill on" data-filter-status="all" onclick="setFilter('status','all',this)">All</span>
+    <span class="f-pill fp-done" data-filter-status="done" onclick="setFilter('status','done',this)">Done</span>
+    <span class="f-pill fp-indev" data-filter-status="indev" onclick="setFilter('status','indev',this)">In dev</span>
+    <span class="f-pill fp-scoping" data-filter-status="scoping" onclick="setFilter('status','scoping',this)">Scoping</span>
+    <span class="f-pill fp-notstarted" data-filter-status="notstarted" onclick="setFilter('status','notstarted',this)">Not started</span>
+    <span class="f-pill fp-blocked" data-filter-status="blocked" onclick="setFilter('status','blocked',this)">Blocked</span>
+  </div>
+
+  <div class="table-wrap">
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Product</th>
+          <th>Half</th>
+          <th>Team</th>
+          <th>Priority</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tbl-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Add / Edit modal -->
+<div class="modal-bg" id="form-modal" onclick="closeFormBg(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title-row">
+        <div class="modal-title" id="form-modal-title">Add item</div>
+        <button class="modal-close" onclick="closeForm()">✕</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <form id="item-form" onsubmit="saveItem(event)">
+        <input type="hidden" id="f-edit-prod">
+        <input type="hidden" id="f-edit-half">
+        <input type="hidden" id="f-edit-idx">
+        <div class="form-grid">
+          <div class="form-group form-full">
+            <label class="form-label">Title</label>
+            <input class="form-input" id="f-title" placeholder="Feature name" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Product</label>
+            <select class="form-select" id="f-prod" required>
+              <option value="">Select…</option>
+              <option value="pv">Piggyvest</option>
+              <option value="pa">PocketApp</option>
+              <option value="pvb">Piggyvest Business</option>
+              <option value="pmd">Pocket Merchant</option>
+              <option value="plat">Platform &amp; Initiatives</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Half</label>
+            <select class="form-select" id="f-half" required>
+              <option value="">Select…</option>
+              <option value="h1">H1 2026</option>
+              <option value="h2">H2 2026</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Team</label>
+            <input class="form-input" id="f-team" placeholder="e.g. Product, Engineering" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Priority</label>
+            <select class="form-select" id="f-priority" required>
+              <option value="">Select…</option>
+              <option value="critical">Critical</option>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select class="form-select" id="f-status" required>
+              <option value="">Select…</option>
+              <option value="notstarted">Not started</option>
+              <option value="scoping">Scoping &amp; design</option>
+              <option value="indev">In development</option>
+              <option value="done">Done</option>
+              <option value="blocked">Blocked</option>
+            </select>
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Description</label>
+            <textarea class="form-textarea" id="f-desc" placeholder="Short description shown on the card" rows="2"></textarea>
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Summary</label>
+            <textarea class="form-textarea" id="f-summary" placeholder="Longer summary shown in the detail modal" rows="3"></textarea>
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Assumptions</label>
+            <textarea class="form-textarea" id="f-assumptions" placeholder="One assumption per line" rows="2"></textarea>
+            <span class="form-hint">One per line</span>
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Risks &amp; watch points</label>
+            <textarea class="form-textarea" id="f-risks" placeholder="One risk per line" rows="2"></textarea>
+            <span class="form-hint">One per line</span>
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Open questions</label>
+            <textarea class="form-textarea" id="f-questions" placeholder="One question per line" rows="2"></textarea>
+            <span class="form-hint">One per line</span>
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Notion URL</label>
+            <input class="form-input" id="f-notion" type="url" placeholder="https://www.notion.so/…">
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" onclick="closeForm()">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="form-submit-btn">Save item</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Delete confirm modal -->
+<div class="modal-bg confirm-modal" id="del-modal" onclick="closeDelBg(event)">
+  <div class="modal">
+    <div class="confirm-body">
+      <p>Delete <strong id="del-name"></strong>? This cannot be undone.</p>
+      <div class="confirm-actions">
+        <button class="btn btn-ghost" onclick="closeDel()">Cancel</button>
+        <button class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Reset confirm modal -->
+<div class="modal-bg confirm-modal" id="reset-modal" onclick="closeResetBg(event)">
+  <div class="modal">
+    <div class="confirm-body">
+      <p>Reset all roadmap data to the original defaults? All edits, additions, and deletions will be lost.</p>
+      <div class="confirm-actions">
+        <button class="btn btn-ghost" onclick="closeReset()">Cancel</button>
+        <button class="btn btn-danger" onclick="doReset()">Reset to defaults</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="data.js"></script>
+<script>
+const API_BASE='http://localhost:8080';
+const PROD_NAMES={pv:"Piggyvest",pa:"PocketApp",pvb:"PVB",pmd:"Pocket Merchant",plat:"Platform"};
+const SL={done:"Done",indev:"In development",scoping:"Scoping & design",notstarted:"Not started",blocked:"Blocked"};
+const PL={critical:"Critical",high:"High",medium:"Medium",low:"Low"};
+
+let filterProd="all", filterStatus="all";
+let pendingDelete=null;
+let pwVisible=false;
+
+/* ── Gate ── */
+function togglePw(){
+  pwVisible=!pwVisible;
+  const inp=document.getElementById("gate-pw");
+  const ico=document.getElementById("eye-icon");
+  inp.type=pwVisible?"text":"password";
+  ico.innerHTML=pwVisible
+    ?`<path d="M2 2l12 12M6.5 6.6A2 2 0 0 0 9.4 9.5M1 8s2.5-5 7-5c1.1 0 2.1.3 3 .7M15 8s-.9 1.8-2.5 3.2M5.5 12.5C6.3 12.8 7.1 13 8 13c4.5 0 7-5 7-5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>`
+    :`<path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.3"/>`;
+}
+
+function checkPw(){
+  const val=document.getElementById("gate-pw").value;
+  const err=document.getElementById("gate-err");
+  const inp=document.getElementById("gate-pw");
+  if(val==="piggyadmin26"){
+    const gate=document.getElementById("gate");
+    gate.style.opacity="0";
+    setTimeout(()=>{
+      gate.style.display="none";
+      document.getElementById("admin").style.display="block";
+      renderAll();
+    },300);
+  } else {
+    err.classList.add("show");
+    inp.classList.add("shake");
+    inp.value="";
+    setTimeout(()=>inp.classList.remove("shake"),400);
+    inp.focus();
+  }
+}
+
+/* ── Persist & render ── */
+async function persist(){
+  const ctrl=new AbortController();
+  const timer=setTimeout(()=>ctrl.abort(),10000);
+  try{
+    const res=await fetch(API_BASE+'/save-data',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(DATA),
+      signal:ctrl.signal
+    });
+    if(!res.ok)throw new Error(`HTTP ${res.status}`);
+    const json=await res.json();
+    if(!json.ok)throw new Error(json.error||'Write failed');
+  }finally{
+    clearTimeout(timer);
+  }
+}
+
+function allRows(){
+  const rows=[];
+  Object.keys(DATA).forEach(prod=>{
+    ["h1","h2"].forEach(half=>{
+      (DATA[prod][half]||[]).forEach((item,idx)=>{
+        rows.push({prod,half,idx,item});
+      });
+    });
+  });
+  return rows;
+}
+
+function renderStats(){
+  const rows=allRows();
+  const total=rows.length;
+  const done=rows.filter(r=>r.item.s==="done").length;
+  const indev=rows.filter(r=>r.item.s==="indev").length;
+  const blocked=rows.filter(r=>r.item.s==="blocked").length;
+  const notstarted=rows.filter(r=>r.item.s==="notstarted").length;
+  document.getElementById("stats-bar").innerHTML=`
+    <div class="stat-box"><b>${total}</b>Total items</div>
+    <div class="stat-box"><b style="color:#10b981">${done}</b>Done</div>
+    <div class="stat-box"><b style="color:#3b82f6">${indev}</b>In development</div>
+    <div class="stat-box"><b style="color:#f59e0b">${rows.filter(r=>r.item.s==="scoping").length}</b>Scoping</div>
+    <div class="stat-box"><b style="color:#6b7280">${notstarted}</b>Not started</div>
+    <div class="stat-box"><b style="color:#ef4444">${blocked}</b>Blocked</div>`;
+}
+
+function renderTable(){
+  const tbody=document.getElementById("tbl-body");
+  const rows=allRows().filter(r=>{
+    if(filterProd!=="all"&&r.prod!==filterProd)return false;
+    if(filterStatus!=="all"&&r.item.s!==filterStatus)return false;
+    return true;
+  });
+  if(!rows.length){
+    tbody.innerHTML=`<tr class="empty-row"><td colspan="7">No items match the current filter.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML=rows.map(({prod,half,idx,item})=>`
+    <tr>
+      <td>
+        <div class="tbl-title">${esc(item.t)}</div>
+        ${item.d?`<div class="tbl-desc">${esc(item.d)}</div>`:""}
+      </td>
+      <td><span class="badge b-${prod}">${PROD_NAMES[prod]}</span></td>
+      <td><span class="badge ${half==="h1"?"b-h1":"b-h2"}">${half.toUpperCase()}</span></td>
+      <td><span class="team-tag">${esc(item.team)}</span></td>
+      <td><span class="badge b-${item.p}">${PL[item.p]}</span></td>
+      <td><span class="badge b-${item.s}">${SL[item.s]}</span></td>
+      <td>
+        <div class="tbl-actions">
+          <button class="btn btn-ghost btn-sm" onclick="openForm('${prod}','${half}',${idx})">Edit</button>
+          <button class="btn btn-danger btn-sm" onclick="openDel('${prod}','${half}',${idx})">Delete</button>
+        </div>
+      </td>
+    </tr>`).join("");
+}
+
+function renderAll(){
+  renderStats();
+  renderTable();
+}
+
+function esc(s){
+  return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+/* ── Filters ── */
+function setFilter(type,val,el){
+  const group=document.querySelectorAll(`[data-filter-${type}]`);
+  group.forEach(p=>p.classList.remove("on"));
+  el.classList.add("on");
+  if(type==="prod")filterProd=val;
+  else filterStatus=val;
+  renderTable();
+}
+
+/* ── Add / Edit form ── */
+function openForm(prod,half,idx){
+  const isEdit=(prod!==undefined);
+  document.getElementById("form-modal-title").textContent=isEdit?"Edit item":"Add item";
+  document.getElementById("form-submit-btn").textContent=isEdit?"Save changes":"Add item";
+  document.getElementById("f-edit-prod").value=isEdit?prod:"";
+  document.getElementById("f-edit-half").value=isEdit?half:"";
+  document.getElementById("f-edit-idx").value=isEdit?idx:"";
+
+  if(isEdit){
+    const item=DATA[prod][half][idx];
+    document.getElementById("f-title").value=item.t||"";
+    document.getElementById("f-prod").value=prod;
+    document.getElementById("f-half").value=half;
+    document.getElementById("f-team").value=item.team||"";
+    document.getElementById("f-priority").value=item.p||"";
+    document.getElementById("f-status").value=item.s||"";
+    document.getElementById("f-desc").value=item.d||"";
+    document.getElementById("f-summary").value=item.summary||"";
+    document.getElementById("f-assumptions").value=(item.assumptions||[]).join("\n");
+    document.getElementById("f-risks").value=(item.risks||[]).join("\n");
+    document.getElementById("f-questions").value=(item.questions||[]).join("\n");
+    document.getElementById("f-notion").value=item.notion||"";
+  } else {
+    document.getElementById("item-form").reset();
+  }
+  document.getElementById("form-modal").classList.add("open");
+  document.body.style.overflow="hidden";
+  setTimeout(()=>document.getElementById("f-title").focus(),60);
+}
+
+function closeForm(){
+  document.getElementById("form-modal").classList.remove("open");
+  document.body.style.overflow="";
+}
+
+function closeFormBg(e){
+  if(e.target===document.getElementById("form-modal"))closeForm();
+}
+
+function splitLines(str){
+  return str.split("\n").map(s=>s.trim()).filter(Boolean);
+}
+
+async function saveItem(e){
+  e.preventDefault();
+  const editProd=document.getElementById("f-edit-prod").value;
+  const editHalf=document.getElementById("f-edit-half").value;
+  const editIdx=document.getElementById("f-edit-idx").value;
+  const isEdit=!!editProd;
+
+  const newProd=document.getElementById("f-prod").value;
+  const newHalf=document.getElementById("f-half").value;
+
+  const item={
+    t:document.getElementById("f-title").value.trim(),
+    team:document.getElementById("f-team").value.trim(),
+    p:document.getElementById("f-priority").value,
+    s:document.getElementById("f-status").value,
+    d:document.getElementById("f-desc").value.trim(),
+    summary:document.getElementById("f-summary").value.trim(),
+    assumptions:splitLines(document.getElementById("f-assumptions").value),
+    risks:splitLines(document.getElementById("f-risks").value),
+    questions:splitLines(document.getElementById("f-questions").value),
+    notion:document.getElementById("f-notion").value.trim()||undefined
+  };
+  if(!item.notion)delete item.notion;
+
+  // Snapshot so we can roll back if the write fails
+  const snapshot=JSON.parse(JSON.stringify(DATA));
+
+  if(isEdit){
+    const sameBucket=(editProd===newProd&&editHalf===newHalf);
+    if(sameBucket){
+      DATA[editProd][editHalf][parseInt(editIdx)]=item;
+    } else {
+      DATA[editProd][editHalf].splice(parseInt(editIdx),1);
+      if(!DATA[newProd][newHalf])DATA[newProd][newHalf]=[];
+      DATA[newProd][newHalf].push(item);
+    }
+  } else {
+    if(!DATA[newProd][newHalf])DATA[newProd][newHalf]=[];
+    DATA[newProd][newHalf].push(item);
+  }
+
+  const btn=document.getElementById("form-submit-btn");
+  const origText=btn.textContent;
+  btn.disabled=true;
+  btn.textContent="Saving…";
+
+  try{
+    await persist();
+    closeForm();
+    renderAll();
+    toast(isEdit?"Changes saved":"Item added");
+  }catch(err){
+    Object.keys(snapshot).forEach(k=>DATA[k]=snapshot[k]);
+    btn.disabled=false;
+    btn.textContent=origText;
+    toast("Save failed — is the server running?");
+  }
+}
+
+/* ── Delete ── */
+function openDel(prod,half,idx){
+  pendingDelete={prod,half,idx};
+  document.getElementById("del-name").textContent=DATA[prod][half][idx].t;
+  document.getElementById("del-modal").classList.add("open");
+  document.body.style.overflow="hidden";
+}
+
+function closeDel(){
+  pendingDelete=null;
+  document.getElementById("del-modal").classList.remove("open");
+  document.body.style.overflow="";
+}
+
+function closeDelBg(e){
+  if(e.target===document.getElementById("del-modal"))closeDel();
+}
+
+async function confirmDelete(){
+  if(!pendingDelete)return;
+  const {prod,half,idx}=pendingDelete;
+  const name=DATA[prod][half][idx].t;
+  const removed=DATA[prod][half].splice(idx,1)[0];
+
+  const btn=document.querySelector("#del-modal .btn-danger");
+  btn.disabled=true;
+  btn.textContent="Deleting…";
+
+  try{
+    await persist();
+    closeDel();
+    renderAll();
+    toast(`"${name}" deleted`);
+  }catch(err){
+    DATA[prod][half].splice(idx,0,removed);
+    btn.disabled=false;
+    btn.textContent="Delete";
+    toast("Delete failed — is the server running?");
+  }
+}
+
+/* ── Reset ── */
+function confirmReset(){
+  document.getElementById("reset-modal").classList.add("open");
+  document.body.style.overflow="hidden";
+}
+
+function closeReset(){
+  document.getElementById("reset-modal").classList.remove("open");
+  document.body.style.overflow="";
+}
+
+function closeResetBg(e){
+  if(e.target===document.getElementById("reset-modal"))closeReset();
+}
+
+async function doReset(){
+  const btn=document.querySelector("#reset-modal .btn-danger");
+  btn.disabled=true;
+  btn.textContent="Resetting…";
+  try{
+    const res=await fetch(API_BASE+'/reset-data',{method:'POST'});
+    const json=await res.json();
+    if(!json.ok)throw new Error(json.error);
+    closeReset();
+    location.reload();
+  }catch(err){
+    btn.disabled=false;
+    btn.textContent="Reset to defaults";
+    toast("Reset failed — is the server running?");
+  }
+}
+
+/* ── Toast ── */
+function toast(msg){
+  const el=document.getElementById("toast");
+  el.textContent=msg;
+  el.classList.add("show");
+  setTimeout(()=>el.classList.remove("show"),2200);
+}
+
+/* ── Keyboard ── */
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){
+    closeForm();
+    closeDel();
+    closeReset();
+  }
+});
+
+document.getElementById("gate-pw").focus();
+</script>
+</body>
+</html>
