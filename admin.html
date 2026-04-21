@@ -4,75 +4,117 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Roadmap Admin — Piggytech</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#1a1a1a;min-height:100vh;background:#f2f2ef}
+body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;min-height:100vh}
 
-/* ── Gate (identical to index.html) ── */
+/* ── Theme vars ── */
+:root{
+  --bg-page:#f2f2ef;--bg-panel:#fff;--bg-surface:#fafaf8;--bg-hover:#f5f5f2;
+  --border-main:#e2e2dd;--border-light:#f0f0eb;
+  --text-1:#1a1a1a;--text-2:#666;--text-3:#aaa;
+  --overlay:rgba(0,0,0,.32);--shadow:0 8px 32px rgba(0,0,0,.1);
+  --sheet-shadow:-6px 0 40px rgba(0,0,0,.1);
+  --input-bg:#fafaf8;--input-focus-shadow:0 0 0 3px rgba(37,99,235,.08);
+}
+[data-theme="dark"]{
+  --bg-page:#111110;--bg-panel:#1a1a18;--bg-surface:#222220;--bg-hover:#252523;
+  --border-main:#2e2e2b;--border-light:#252523;
+  --text-1:#f0f0ec;--text-2:#888;--text-3:#555;
+  --overlay:rgba(0,0,0,.65);--shadow:0 8px 32px rgba(0,0,0,.5);
+  --sheet-shadow:-6px 0 40px rgba(0,0,0,.5);
+  --input-bg:#222220;--input-focus-shadow:0 0 0 3px rgba(59,130,246,.1);
+}
+
+/* ── Gate ── */
 #gate{position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#e8f0fe 0%,#f2f2ef 50%,#ede9fe 100%);transition:opacity .3s}
-.gate-box{width:100%;max-width:360px;background:#fff;border:1px solid #e2e2dd;border-radius:14px;padding:32px 28px;text-align:left}
+.gate-box{width:100%;max-width:360px;background:#fff;border:1px solid #e2e2dd;border-radius:14px;padding:32px 28px}
 .gate-icon{width:38px;height:38px;border-radius:10px;background:#eff6ff;border:1px solid #bfdbfe;display:flex;align-items:center;justify-content:center;margin-bottom:18px}
-.gate-title{font-size:16px;font-weight:600;color:#1a1a1a;margin-bottom:4px;letter-spacing:-.2px}
+.gate-title{font-size:16px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
 .gate-sub{font-size:12.5px;color:#999;margin-bottom:22px;line-height:1.55}
 .gate-field{position:relative;margin-bottom:12px}
-.gate-input{display:block;width:100%;padding:10px 38px 10px 13px;border-radius:8px;border:1px solid #e2e2dd;background:#fafaf8;color:#1a1a1a;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:13.5px;outline:none;transition:border-color .15s,box-shadow .15s;-webkit-appearance:none}
+.gate-input{display:block;width:100%;padding:10px 38px 10px 13px;border-radius:8px;border:1px solid #e2e2dd;background:#fafaf8;color:#1a1a1a;font-family:inherit;font-size:13.5px;outline:none;transition:border-color .15s,box-shadow .15s;-webkit-appearance:none}
 .gate-input:focus{border-color:#2563eb;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
 .gate-input::placeholder{color:#c4c4bf}
 .gate-input.shake{animation:shake .35s ease}
-.gate-eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);cursor:pointer;color:#c4c4bf;background:none;border:none;padding:0;display:flex;align-items:center;transition:color .12s}
+.gate-eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);cursor:pointer;color:#c4c4bf;background:none;border:none;padding:0;display:flex;align-items:center}
 .gate-eye:hover{color:#888}
-.gate-btn{display:block;width:100%;padding:10px;border-radius:8px;border:none;background:#2563eb;color:#fff;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;transition:background .12s,transform .1s}
+.gate-btn{display:block;width:100%;padding:10px;border-radius:8px;border:none;background:#2563eb;color:#fff;font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer;transition:background .12s}
 .gate-btn:hover{background:#1d4ed8}
-.gate-btn:active{transform:scale(.98)}
 .gate-error{font-size:12px;color:#ef4444;margin-top:8px;display:none;align-items:center;gap:4px}
 .gate-error.show{display:flex}
 .gate-footer{margin-top:20px;font-size:11px;color:#ccc;text-align:center}
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
 
 /* ── Admin shell ── */
-#admin{display:none;max-width:1200px;margin:0 auto;padding:32px 20px 80px}
+#admin{display:none;background:var(--bg-page);min-height:100vh;color:var(--text-1)}
+.admin-inner{max-width:1200px;margin:0 auto;padding:28px 20px 80px}
+
+/* ── Header ── */
 .admin-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:24px}
-.admin-header-left h1{font-size:20px;font-weight:600;color:#1a1a1a;margin-bottom:3px}
-.admin-header-left p{font-size:12.5px;color:#888}
+.admin-header-left h1{font-size:19px;font-weight:700;color:var(--text-1);margin-bottom:3px}
+.admin-header-left p{font-size:12px;color:var(--text-3)}
+.admin-header-left a{color:#2563eb;text-decoration:none}
 .admin-header-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 
-/* Buttons */
-.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;border:1px solid transparent;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .12s;white-space:nowrap}
+/* ── Theme button (sun/moon) ── */
+.theme-btn{width:34px;height:34px;border-radius:8px;border:1px solid var(--border-main);background:var(--bg-surface);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-2);transition:background .12s,color .12s;flex-shrink:0}
+.theme-btn:hover{background:var(--bg-hover);color:var(--text-1)}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;border:1px solid transparent;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .12s;white-space:nowrap}
 .btn-primary{background:#2563eb;color:#fff;border-color:#2563eb}
 .btn-primary:hover{background:#1d4ed8;border-color:#1d4ed8}
-.btn-ghost{background:#fff;color:#555;border-color:#e2e2dd}
-.btn-ghost:hover{border-color:#999;color:#1a1a1a}
-.btn-danger{background:#fff;color:#dc2626;border-color:#fecaca}
+.btn-ghost{background:var(--bg-panel);color:var(--text-2);border-color:var(--border-main)}
+.btn-ghost:hover{border-color:#999;color:var(--text-1)}
+.btn-danger{background:var(--bg-panel);color:#dc2626;border-color:#fecaca}
 .btn-danger:hover{background:#fee2e2;border-color:#fca5a5}
-.btn-sm{padding:5px 10px;font-size:12px}
+.btn-icon{width:30px;height:30px;border-radius:7px;border:1px solid transparent;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-3);transition:all .12s;flex-shrink:0}
+.btn-icon:hover{background:var(--bg-hover);color:var(--text-1);border-color:var(--border-main)}
+.btn-icon.btn-icon-danger:hover{background:#fee2e2;color:#dc2626;border-color:#fecaca}
 
-/* Toolbar */
-.toolbar{background:#fff;border:1px solid #e2e2dd;border-radius:10px;padding:14px 16px;margin-bottom:16px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.toolbar-label{font-size:11px;color:#bbb;font-weight:600;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
-.f-pill{padding:4px 11px;border-radius:20px;font-size:11.5px;font-weight:500;cursor:pointer;border:1px solid #e2e2dd;background:#fafaf8;color:#888;transition:all .12s;white-space:nowrap;user-select:none}
-.f-pill:hover{border-color:#888;color:#1a1a1a}
-.f-pill.on{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+/* ── Analytics cards ── */
+.analytics{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.acard{background:var(--bg-panel);border:1px solid var(--border-main);border-left:3px solid transparent;border-radius:10px;padding:12px 16px;min-width:100px;flex:1;transition:background .2s,border-color .2s}
+.acard-num{font-size:26px;font-weight:700;line-height:1;margin-bottom:4px}
+.acard-lbl{font-size:11px;font-weight:500;color:var(--text-3);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+.ac-total{border-left-color:#94a3b8}.ac-total .acard-num{color:var(--text-1)}
+.ac-done{border-left-color:#10b981}.ac-done .acard-num{color:#10b981}
+.ac-indev{border-left-color:#3b82f6}.ac-indev .acard-num{color:#3b82f6}
+.ac-scoping{border-left-color:#f59e0b}.ac-scoping .acard-num{color:#f59e0b}
+.ac-notstarted{border-left-color:#94a3b8}.ac-notstarted .acard-num{color:#6b7280}
+.ac-blocked{border-left-color:#ef4444}.ac-blocked .acard-num{color:#ef4444}
+
+/* ── Toolbar ── */
+.toolbar{background:var(--bg-panel);border:1px solid var(--border-main);border-radius:10px;padding:12px 16px;margin-bottom:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;transition:background .2s}
+.toolbar-label{font-size:11px;color:var(--text-3);font-weight:600;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+.f-pill{padding:4px 11px;border-radius:20px;font-size:11.5px;font-weight:500;cursor:pointer;border:1px solid var(--border-main);background:var(--bg-surface);color:var(--text-2);transition:all .12s;white-space:nowrap;user-select:none}
+.f-pill:hover{border-color:#888;color:var(--text-1)}
+.f-pill.on{background:var(--text-1);color:var(--bg-page);border-color:var(--text-1)}
 .f-pill.fp-done.on{background:#d1fae5;color:#065f46;border-color:#6ee7b7}
 .f-pill.fp-indev.on{background:#dbeafe;color:#1e40af;border-color:#93c5fd}
 .f-pill.fp-scoping.on{background:#fef9c3;color:#854d0e;border-color:#fde047}
 .f-pill.fp-notstarted.on{background:#f3f4f6;color:#374151;border-color:#d1d5db}
 .f-pill.fp-blocked.on{background:#fee2e2;color:#991b1b;border-color:#fca5a5}
-.toolbar-sep{width:1px;height:18px;background:#e8e8e3;flex-shrink:0}
+.toolbar-sep{width:1px;height:18px;background:var(--border-main);flex-shrink:0}
 
-/* Table */
-.table-wrap{background:#fff;border:1px solid #e2e2dd;border-radius:10px;overflow:hidden}
+/* ── Table ── */
+.table-wrap{background:var(--bg-panel);border:1px solid var(--border-main);border-radius:10px;overflow:hidden;transition:background .2s}
 .tbl{width:100%;border-collapse:collapse;font-size:13px}
-.tbl thead tr{background:#fafaf8;border-bottom:1px solid #e8e8e3}
-.tbl th{padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
-.tbl td{padding:11px 14px;border-bottom:1px solid #f0f0eb;vertical-align:middle}
+.tbl thead tr{background:var(--bg-surface);border-bottom:1px solid var(--border-main)}
+.tbl th{padding:10px 14px;text-align:left;font-size:10.5px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+.tbl td{padding:12px 14px;border-bottom:1px solid var(--border-light);vertical-align:middle;transition:background .12s}
 .tbl tr:last-child td{border-bottom:none}
-.tbl tr:hover td{background:#fafaf8}
-.tbl-title{font-weight:600;color:#1a1a1a;line-height:1.4}
-.tbl-desc{font-size:11.5px;color:#aaa;margin-top:2px;line-height:1.4;max-width:320px}
-.tbl-actions{display:flex;gap:6px;align-items:center;white-space:nowrap}
+.tbl tbody tr{cursor:pointer}
+.tbl tbody tr:hover td{background:var(--bg-hover)}
+.tbl-title{font-weight:600;color:var(--text-1);line-height:1.4;font-size:13px}
+.tbl-desc{font-size:11.5px;color:var(--text-3);margin-top:2px;line-height:1.4;max-width:340px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tbl-actions{display:flex;gap:4px;align-items:center;justify-content:flex-end}
+.empty-row td{text-align:center;padding:40px 0;color:var(--text-3);font-size:13px;cursor:default!important}
+.tbl tbody tr.empty-row:hover td{background:transparent!important}
 
-/* Badges */
+/* ── Badges ── */
 .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
 .b-pv{background:#eff6ff;color:#1d4ed8}
 .b-pa{background:#f5f3ff;color:#6d28d9}
@@ -90,50 +132,83 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#1
 .b-high{background:#fef3c7;color:#92400e}
 .b-medium{background:#dbeafe;color:#1e40af}
 .b-low{background:#f3f4f6;color:#6b7280}
+.team-tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500;background:var(--bg-surface);color:var(--text-2);border:1px solid var(--border-main)}
 
-.team-tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500;background:#f2f2ef;color:#666}
-.empty-row td{text-align:center;padding:40px 0;color:#bbb;font-size:13px}
+/* ── Trash section ── */
+.section-header{display:flex;align-items:center;gap:10px;margin:28px 0 14px;cursor:pointer;user-select:none}
+.section-title{font-size:13px;font-weight:600;color:var(--text-2)}
+.section-count{font-size:11.5px;color:var(--text-3);background:var(--bg-surface);border:1px solid var(--border-main);border-radius:20px;padding:1px 8px}
+.section-chevron{color:var(--text-3);transition:transform .2s;display:flex;align-items:center}
+.section-chevron.open{transform:rotate(90deg)}
+.trash-wrap{display:none}
+.trash-wrap.open{display:block}
+.trash-table-wrap{background:var(--bg-panel);border:1px solid var(--border-main);border-radius:10px;overflow:hidden}
+.trash-empty{padding:28px;text-align:center;color:var(--text-3);font-size:13px}
+.days-pill{font-size:11px;font-weight:500;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.days-ok{background:#fef9c3;color:#854d0e}
+.days-soon{background:#fee2e2;color:#991b1b}
 
-/* Stats bar */
-.stats-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-.stat-box{background:#fff;border:1px solid #e2e2dd;border-radius:8px;padding:10px 16px;font-size:12px;color:#888;white-space:nowrap}
-.stat-box b{font-size:18px;font-weight:600;color:#1a1a1a;display:block;margin-bottom:1px}
+/* ── Side sheet ── */
+.sheet-overlay{position:fixed;inset:0;background:var(--overlay);z-index:150;opacity:0;pointer-events:none;transition:opacity .25s}
+.sheet-overlay.open{opacity:1;pointer-events:all}
+.sheet{position:fixed;top:0;right:0;bottom:0;width:460px;max-width:100vw;background:var(--bg-panel);border-left:1px solid var(--border-main);z-index:151;transform:translateX(100%);transition:transform .26s cubic-bezier(.32,.72,0,1);display:flex;flex-direction:column;box-shadow:var(--sheet-shadow)}
+.sheet.open{transform:translateX(0)}
+.sheet-header{padding:18px 20px 16px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0;background:var(--bg-panel)}
+.sheet-title{font-size:15px;font-weight:700;color:var(--text-1);line-height:1.3}
+.sheet-close{width:28px;height:28px;border-radius:7px;border:1px solid var(--border-main);background:var(--bg-surface);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-2);transition:background .12s;flex-shrink:0}
+.sheet-close:hover{background:var(--bg-hover)}
+.sheet-body{flex:1;overflow-y:auto;padding:20px}
+.sheet-footer{padding:14px 20px;border-top:1px solid var(--border-light);display:flex;gap:8px;justify-content:flex-end;flex-shrink:0;background:var(--bg-panel)}
 
-/* ── Modal overlay ── */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:100;align-items:center;justify-content:center;padding:20px}
-.modal-bg.open{display:flex}
-.modal{background:#fff;border-radius:14px;border:1px solid #e2e2dd;width:100%;max-width:620px;max-height:90vh;overflow-y:auto;position:relative}
-.modal-header{padding:20px 22px 16px;border-bottom:1px solid #f0f0eb;position:sticky;top:0;background:#fff;z-index:2;border-radius:14px 14px 0 0}
-.modal-title-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.modal-title{font-size:15px;font-weight:600;color:#1a1a1a}
-.modal-close{width:28px;height:28px;border-radius:8px;border:1px solid #e2e2dd;background:#fafaf8;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;color:#888;transition:background .12s}
-.modal-close:hover{background:#f2f2ef}
-.modal-body{padding:20px 22px 24px}
+/* ── Sheet status strip ── */
+.sheet-status-strip{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
 
-/* Form */
+/* ── Form ── */
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .form-full{grid-column:1/-1}
-.form-group{display:flex;flex-direction:column;gap:5px}
-.form-label{font-size:11px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:.4px}
-.form-input,.form-select,.form-textarea{width:100%;padding:9px 12px;border-radius:8px;border:1px solid #e2e2dd;background:#fafaf8;color:#1a1a1a;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:13.5px;outline:none;transition:border-color .15s,box-shadow .15s;-webkit-appearance:none}
-.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:#2563eb;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
-.form-input::placeholder,.form-textarea::placeholder{color:#c4c4bf}
-.form-textarea{resize:vertical;min-height:72px;line-height:1.55}
-.form-hint{font-size:11px;color:#bbb;margin-top:1px}
-.form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid #f0f0eb}
+.form-group{display:flex;flex-direction:column;gap:4px}
+.form-label{font-size:10.5px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px}
+.form-input,.form-select,.form-textarea{width:100%;padding:9px 12px;border-radius:8px;border:1px solid var(--border-main);background:var(--input-bg);color:var(--text-1);font-family:inherit;font-size:13px;outline:none;transition:border-color .15s,box-shadow .15s;-webkit-appearance:none}
+.form-select{background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23aaa' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:#2563eb;background:var(--bg-panel);box-shadow:var(--input-focus-shadow)}
+.form-input::placeholder,.form-textarea::placeholder{color:var(--text-3)}
+.form-textarea{resize:vertical;min-height:68px;line-height:1.55}
+.char-row{display:flex;justify-content:space-between;align-items:center;margin-top:2px}
+.form-hint{font-size:11px;color:var(--text-3)}
+.char-count{font-size:11px;color:var(--text-3);transition:color .12s}
+.char-count.warn{color:#f59e0b}
+.char-count.over{color:#ef4444}
+.form-section-sep{grid-column:1/-1;height:1px;background:var(--border-light);margin:4px 0}
 
-/* Delete confirm */
-.confirm-modal .modal{max-width:400px}
-.confirm-body{padding:24px 22px}
-.confirm-body p{font-size:13.5px;color:#555;line-height:1.6;margin-bottom:20px}
-.confirm-body strong{color:#1a1a1a}
+/* ── Confirm modal ── */
+.modal-bg{display:none;position:fixed;inset:0;background:var(--overlay);z-index:200;align-items:center;justify-content:center;padding:20px}
+.modal-bg.open{display:flex}
+.modal{background:var(--bg-panel);border-radius:12px;border:1px solid var(--border-main);width:100%;max-width:380px;box-shadow:var(--shadow)}
+.confirm-body{padding:22px}
+.confirm-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.confirm-icon-warn{background:#fee2e2}
+.confirm-icon-info{background:#dbeafe}
+.confirm-title{font-size:14px;font-weight:700;color:var(--text-1);margin-bottom:6px}
+.confirm-msg{font-size:13px;color:var(--text-2);line-height:1.6;margin-bottom:18px}
+.confirm-msg strong{color:var(--text-1)}
 .confirm-actions{display:flex;gap:8px;justify-content:flex-end}
 
-/* Toast */
-.toast{position:fixed;bottom:24px;right:24px;z-index:999;background:#1a1a1a;color:#f0f0ec;font-size:12.5px;font-weight:500;padding:10px 16px;border-radius:8px;opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;pointer-events:none}
-.toast.show{opacity:1;transform:translateY(0)}
+/* ── Reset confirm (keep separate modal) ── */
+.modal-sm .modal{max-width:380px}
 
-@media(max-width:640px){.form-grid{grid-template-columns:1fr}.admin-header{flex-direction:column;align-items:flex-start}.stats-bar{display:grid;grid-template-columns:1fr 1fr}}
+/* ── Toast ── */
+.toast{position:fixed;bottom:24px;right:24px;z-index:999;font-size:12.5px;font-weight:600;padding:10px 16px;border-radius:9px;opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;pointer-events:none;display:flex;align-items:center;gap:8px;max-width:320px}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast-success{background:#052e16;color:#6ee7b7;border:1px solid #065f46}
+.toast-error{background:#3a0a0a;color:#fca5a5;border:1px solid #991b1b}
+.toast-info{background:#1a1a18;color:#f0f0ec;border:1px solid #2e2e2b}
+
+@media(max-width:640px){
+  .form-grid{grid-template-columns:1fr}
+  .admin-header{flex-direction:column;align-items:flex-start}
+  .analytics{display:grid;grid-template-columns:repeat(3,1fr)}
+  .sheet{width:100vw}
+}
 </style>
 </head>
 <body>
@@ -145,7 +220,7 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#1
       <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M3 7V5a5 5 0 0 1 10 0v2"/><rect x="1" y="7" width="14" height="8" rx="2" stroke="#2563eb" stroke-width="1.5"/><circle cx="8" cy="11" r="1.5" fill="#2563eb"/></svg>
     </div>
     <div class="gate-title">Roadmap Admin</div>
-    <div class="gate-sub">Piggytech internal use only. Changes are saved locally in your browser.</div>
+    <div class="gate-sub">Piggytech internal use only.</div>
     <div class="gate-field">
       <input class="gate-input" id="gate-pw" type="password" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')checkPw()">
       <button class="gate-eye" onclick="togglePw()" tabindex="-1">
@@ -163,179 +238,240 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#1
 
 <!-- Admin -->
 <div id="admin">
-  <div class="admin-header">
-    <div class="admin-header-left">
-      <h1>Roadmap admin</h1>
-      <p>Piggytech 2026 · Changes saved to browser storage · <a href="index.html" style="color:#2563eb;text-decoration:none">View roadmap →</a></p>
-    </div>
-    <div class="admin-header-right">
-      <button class="btn btn-ghost" onclick="confirmReset()">Reset to defaults</button>
-      <button class="btn btn-primary" onclick="openForm()">
-        <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        Add item
-      </button>
-    </div>
-  </div>
+  <div class="admin-inner">
 
-  <div class="stats-bar" id="stats-bar"></div>
-
-  <div class="toolbar">
-    <span class="toolbar-label">Product</span>
-    <span class="f-pill on" data-filter-prod="all" onclick="setFilter('prod','all',this)">All</span>
-    <span class="f-pill" data-filter-prod="pv" onclick="setFilter('prod','pv',this)">Piggyvest</span>
-    <span class="f-pill" data-filter-prod="pa" onclick="setFilter('prod','pa',this)">PocketApp</span>
-    <span class="f-pill" data-filter-prod="pvb" onclick="setFilter('prod','pvb',this)">PVB</span>
-    <span class="f-pill" data-filter-prod="pmd" onclick="setFilter('prod','pmd',this)">Pocket Merchant</span>
-    <span class="f-pill" data-filter-prod="plat" onclick="setFilter('prod','plat',this)">Platform</span>
-    <span class="toolbar-sep"></span>
-    <span class="toolbar-label">Status</span>
-    <span class="f-pill on" data-filter-status="all" onclick="setFilter('status','all',this)">All</span>
-    <span class="f-pill fp-done" data-filter-status="done" onclick="setFilter('status','done',this)">Done</span>
-    <span class="f-pill fp-indev" data-filter-status="indev" onclick="setFilter('status','indev',this)">In dev</span>
-    <span class="f-pill fp-scoping" data-filter-status="scoping" onclick="setFilter('status','scoping',this)">Scoping</span>
-    <span class="f-pill fp-notstarted" data-filter-status="notstarted" onclick="setFilter('status','notstarted',this)">Not started</span>
-    <span class="f-pill fp-blocked" data-filter-status="blocked" onclick="setFilter('status','blocked',this)">Blocked</span>
-  </div>
-
-  <div class="table-wrap">
-    <table class="tbl">
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th>Product</th>
-          <th>Half</th>
-          <th>Team</th>
-          <th>Priority</th>
-          <th>Status</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody id="tbl-body"></tbody>
-    </table>
-  </div>
-</div>
-
-<!-- Add / Edit modal -->
-<div class="modal-bg" id="form-modal" onclick="closeFormBg(event)">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title-row">
-        <div class="modal-title" id="form-modal-title">Add item</div>
-        <button class="modal-close" onclick="closeForm()">✕</button>
+    <div class="admin-header">
+      <div class="admin-header-left">
+        <h1>Roadmap admin</h1>
+        <p>Piggytech 2026 · <a href="index.html">View roadmap →</a></p>
+      </div>
+      <div class="admin-header-right">
+        <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+          <svg id="theme-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 9.5A5.5 5.5 0 016 2a6 6 0 100 12 5.5 5.5 0 007.5-4.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="btn btn-ghost" onclick="showResetConfirm()">Reset to defaults</button>
+        <button class="btn btn-primary" onclick="openSheet()">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Add item
+        </button>
       </div>
     </div>
-    <div class="modal-body">
-      <form id="item-form" onsubmit="saveItem(event)">
-        <input type="hidden" id="f-edit-prod">
-        <input type="hidden" id="f-edit-half">
-        <input type="hidden" id="f-edit-idx">
-        <div class="form-grid">
-          <div class="form-group form-full">
-            <label class="form-label">Title</label>
-            <input class="form-input" id="f-title" placeholder="Feature name" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Product</label>
-            <select class="form-select" id="f-prod" required>
-              <option value="">Select…</option>
-              <option value="pv">Piggyvest</option>
-              <option value="pa">PocketApp</option>
-              <option value="pvb">Piggyvest Business</option>
-              <option value="pmd">Pocket Merchant</option>
-              <option value="plat">Platform &amp; Initiatives</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Half</label>
-            <select class="form-select" id="f-half" required>
-              <option value="">Select…</option>
-              <option value="h1">H1 2026</option>
-              <option value="h2">H2 2026</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Team</label>
-            <input class="form-input" id="f-team" placeholder="e.g. Product, Engineering" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Priority</label>
-            <select class="form-select" id="f-priority" required>
-              <option value="">Select…</option>
-              <option value="critical">Critical</option>
-              <option value="high">High</option>
-              <option value="medium">Medium</option>
-              <option value="low">Low</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Status</label>
-            <select class="form-select" id="f-status" required>
-              <option value="">Select…</option>
-              <option value="notstarted">Not started</option>
-              <option value="scoping">Scoping &amp; design</option>
-              <option value="indev">In development</option>
-              <option value="done">Done</option>
-              <option value="blocked">Blocked</option>
-            </select>
-          </div>
-          <div class="form-group form-full">
-            <label class="form-label">Description</label>
-            <textarea class="form-textarea" id="f-desc" placeholder="Short description shown on the card" rows="2"></textarea>
-          </div>
-          <div class="form-group form-full">
-            <label class="form-label">Summary</label>
-            <textarea class="form-textarea" id="f-summary" placeholder="Longer summary shown in the detail modal" rows="3"></textarea>
-          </div>
-          <div class="form-group form-full">
-            <label class="form-label">Assumptions</label>
-            <textarea class="form-textarea" id="f-assumptions" placeholder="One assumption per line" rows="2"></textarea>
-            <span class="form-hint">One per line</span>
-          </div>
-          <div class="form-group form-full">
-            <label class="form-label">Risks &amp; watch points</label>
-            <textarea class="form-textarea" id="f-risks" placeholder="One risk per line" rows="2"></textarea>
-            <span class="form-hint">One per line</span>
-          </div>
-          <div class="form-group form-full">
-            <label class="form-label">Open questions</label>
-            <textarea class="form-textarea" id="f-questions" placeholder="One question per line" rows="2"></textarea>
-            <span class="form-hint">One per line</span>
-          </div>
-          <div class="form-group form-full">
-            <label class="form-label">Notion URL</label>
-            <input class="form-input" id="f-notion" type="url" placeholder="https://www.notion.so/…">
-          </div>
-        </div>
-        <div class="form-actions">
-          <button type="button" class="btn btn-ghost" onclick="closeForm()">Cancel</button>
-          <button type="submit" class="btn btn-primary" id="form-submit-btn">Save item</button>
-        </div>
-      </form>
+
+    <div class="analytics" id="analytics-bar"></div>
+
+    <div class="toolbar">
+      <span class="toolbar-label">Product</span>
+      <span class="f-pill on" data-filter-prod="all" onclick="setFilter('prod','all',this)">All</span>
+      <span class="f-pill" data-filter-prod="pv" onclick="setFilter('prod','pv',this)">Piggyvest</span>
+      <span class="f-pill" data-filter-prod="pa" onclick="setFilter('prod','pa',this)">PocketApp</span>
+      <span class="f-pill" data-filter-prod="pvb" onclick="setFilter('prod','pvb',this)">PVB</span>
+      <span class="f-pill" data-filter-prod="pmd" onclick="setFilter('prod','pmd',this)">Pocket Merchant</span>
+      <span class="f-pill" data-filter-prod="plat" onclick="setFilter('prod','plat',this)">Platform</span>
+      <span class="toolbar-sep"></span>
+      <span class="toolbar-label">Status</span>
+      <span class="f-pill on" data-filter-status="all" onclick="setFilter('status','all',this)">All</span>
+      <span class="f-pill fp-done" data-filter-status="done" onclick="setFilter('status','done',this)">Done</span>
+      <span class="f-pill fp-indev" data-filter-status="indev" onclick="setFilter('status','indev',this)">In dev</span>
+      <span class="f-pill fp-scoping" data-filter-status="scoping" onclick="setFilter('status','scoping',this)">Scoping</span>
+      <span class="f-pill fp-notstarted" data-filter-status="notstarted" onclick="setFilter('status','notstarted',this)">Not started</span>
+      <span class="f-pill fp-blocked" data-filter-status="blocked" onclick="setFilter('status','blocked',this)">Blocked</span>
     </div>
+
+    <div class="table-wrap">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Product</th>
+            <th>Half</th>
+            <th>Team</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="tbl-body"></tbody>
+      </table>
+    </div>
+
+    <!-- Trash -->
+    <div class="section-header" onclick="toggleTrash()">
+      <span class="section-chevron" id="trash-chevron">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M5 3l6 5-6 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M6 4V2h4v2M5 4v9a1 1 0 001 1h4a1 1 0 001-1V4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="section-title">Trash</span>
+      <span class="section-count" id="trash-count">0</span>
+      <span class="form-hint" style="margin-left:2px">Items are permanently deleted after 14 days</span>
+    </div>
+    <div class="trash-wrap" id="trash-wrap">
+      <div class="trash-table-wrap">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Product</th>
+              <th>Half</th>
+              <th>Deleted</th>
+              <th>Expires</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="trash-body"></tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 </div>
 
-<!-- Delete confirm modal -->
-<div class="modal-bg confirm-modal" id="del-modal" onclick="closeDelBg(event)">
+<!-- Side sheet -->
+<div class="sheet-overlay" id="sheet-overlay" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-header">
+    <div class="sheet-title" id="sheet-title">Add item</div>
+    <button class="sheet-close" onclick="closeSheet()">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+  <div class="sheet-body">
+    <div class="sheet-status-strip" id="sheet-status-strip"></div>
+    <form id="sheet-form" onsubmit="saveSheet(event)">
+      <input type="hidden" id="s-edit-prod">
+      <input type="hidden" id="s-edit-half">
+      <input type="hidden" id="s-edit-idx">
+      <div class="form-grid">
+
+        <div class="form-group form-full">
+          <label class="form-label">Title</label>
+          <input class="form-input" id="s-title" placeholder="Feature name" data-max="100" oninput="updateCharCount(this)" required>
+          <div class="char-row">
+            <span class="form-hint"></span>
+            <span class="char-count" id="cc-s-title">0/100</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Product</label>
+          <select class="form-select" id="s-prod" required>
+            <option value="">Select…</option>
+            <option value="pv">Piggyvest</option>
+            <option value="pa">PocketApp</option>
+            <option value="pvb">Piggyvest Business</option>
+            <option value="pmd">Pocket Merchant</option>
+            <option value="plat">Platform &amp; Initiatives</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Half</label>
+          <select class="form-select" id="s-half" required>
+            <option value="">Select…</option>
+            <option value="h1">H1 2026</option>
+            <option value="h2">H2 2026</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Team</label>
+          <input class="form-input" id="s-team" placeholder="e.g. Product, Engineering" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Priority</label>
+          <select class="form-select" id="s-priority" required onchange="updateSheetStrip()">
+            <option value="">Select…</option>
+            <option value="critical">Critical</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+
+        <div class="form-group form-full">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="s-status" required onchange="updateSheetStrip()">
+            <option value="">Select…</option>
+            <option value="notstarted">Not started</option>
+            <option value="scoping">Scoping &amp; design</option>
+            <option value="indev">In development</option>
+            <option value="done">Done</option>
+            <option value="blocked">Blocked</option>
+          </select>
+        </div>
+
+        <div class="form-section-sep"></div>
+
+        <div class="form-group form-full">
+          <label class="form-label">Description</label>
+          <textarea class="form-textarea" id="s-desc" placeholder="Short description shown on the card" rows="3" data-max="500" oninput="updateCharCount(this)"></textarea>
+          <div class="char-row">
+            <span class="form-hint">Shown on the roadmap card</span>
+            <span class="char-count" id="cc-s-desc">0/500</span>
+          </div>
+        </div>
+
+        <div class="form-group form-full">
+          <label class="form-label">Assumptions</label>
+          <textarea class="form-textarea" id="s-assumptions" placeholder="One assumption per line" rows="3" data-max="500" oninput="updateCharCount(this)"></textarea>
+          <div class="char-row">
+            <span class="form-hint">One per line</span>
+            <span class="char-count" id="cc-s-assumptions">0/500</span>
+          </div>
+        </div>
+
+        <div class="form-group form-full">
+          <label class="form-label">Risks &amp; watch points</label>
+          <textarea class="form-textarea" id="s-risks" placeholder="One risk per line" rows="3" data-max="500" oninput="updateCharCount(this)"></textarea>
+          <div class="char-row">
+            <span class="form-hint">One per line</span>
+            <span class="char-count" id="cc-s-risks">0/500</span>
+          </div>
+        </div>
+
+        <div class="form-group form-full">
+          <label class="form-label">Notion URL <span style="font-weight:400;text-transform:none;font-size:10px">(optional)</span></label>
+          <input class="form-input" id="s-notion" type="url" placeholder="https://www.notion.so/…">
+        </div>
+
+      </div>
+    </form>
+  </div>
+  <div class="sheet-footer">
+    <button type="button" class="btn btn-ghost" onclick="closeSheet()">Cancel</button>
+    <button type="submit" form="sheet-form" class="btn btn-primary" id="sheet-submit-btn">Save item</button>
+  </div>
+</div>
+
+<!-- Confirm modal -->
+<div class="modal-bg" id="confirm-modal" onclick="closeConfirmBg(event)">
   <div class="modal">
     <div class="confirm-body">
-      <p>Delete <strong id="del-name"></strong>? This cannot be undone.</p>
+      <div class="confirm-icon" id="confirm-icon-el">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v5M8 11v.5" stroke="#dc2626" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="8" r="7" stroke="#dc2626" stroke-width="1.5"/></svg>
+      </div>
+      <div class="confirm-title" id="confirm-title">Are you sure?</div>
+      <div class="confirm-msg" id="confirm-msg"></div>
       <div class="confirm-actions">
-        <button class="btn btn-ghost" onclick="closeDel()">Cancel</button>
-        <button class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+        <button class="btn btn-ghost" onclick="closeConfirm()">Cancel</button>
+        <button class="btn btn-danger" id="confirm-ok" onclick="runConfirm()">Confirm</button>
       </div>
     </div>
   </div>
 </div>
 
 <!-- Reset confirm modal -->
-<div class="modal-bg confirm-modal" id="reset-modal" onclick="closeResetBg(event)">
+<div class="modal-bg" id="reset-modal" onclick="if(event.target===this)closeReset()">
   <div class="modal">
     <div class="confirm-body">
-      <p>Reset all roadmap data to the original defaults? All edits, additions, and deletions will be lost.</p>
+      <div class="confirm-icon confirm-icon-warn">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v5M8 11v.5" stroke="#dc2626" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="8" r="7" stroke="#dc2626" stroke-width="1.5"/></svg>
+      </div>
+      <div class="confirm-title">Reset all data?</div>
+      <div class="confirm-msg">This will restore the original defaults. All edits, additions, and deletions will be permanently lost.</div>
       <div class="confirm-actions">
         <button class="btn btn-ghost" onclick="closeReset()">Cancel</button>
-        <button class="btn btn-danger" onclick="doReset()">Reset to defaults</button>
+        <button class="btn btn-danger" id="reset-ok" onclick="doReset()">Reset to defaults</button>
       </div>
     </div>
   </div>
@@ -345,334 +481,526 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#1
 
 <script src="data.js"></script>
 <script>
-const API_BASE='http://localhost:8080';
-const PROD_NAMES={pv:"Piggyvest",pa:"PocketApp",pvb:"PVB",pmd:"Pocket Merchant",plat:"Platform"};
-const SL={done:"Done",indev:"In development",scoping:"Scoping & design",notstarted:"Not started",blocked:"Blocked"};
-const PL={critical:"Critical",high:"High",medium:"Medium",low:"Low"};
+const API_BASE = 'http://localhost:8080';
+const TRASH_KEY = 'piggy_trash_v1';
+const TRASH_TTL = 14 * 24 * 60 * 60 * 1000;
 
-let filterProd="all", filterStatus="all";
-let pendingDelete=null;
-let pwVisible=false;
+const PROD_NAMES = {pv:"Piggyvest",pa:"PocketApp",pvb:"PVB",pmd:"Pocket Merchant",plat:"Platform"};
+const SL = {done:"Done",indev:"In development",scoping:"Scoping & design",notstarted:"Not started",blocked:"Blocked"};
+const PL = {critical:"Critical",high:"High",medium:"Medium",low:"Low"};
+
+const STATUS_COLORS = {
+  done:{bg:"#d1fae5",color:"#065f46"},
+  indev:{bg:"#dbeafe",color:"#1e40af"},
+  scoping:{bg:"#fef9c3",color:"#854d0e"},
+  notstarted:{bg:"#f3f4f6",color:"#374151"},
+  blocked:{bg:"#fee2e2",color:"#991b1b"}
+};
+const PRI_COLORS = {
+  critical:{bg:"#fee2e2",color:"#991b1b"},
+  high:{bg:"#fef3c7",color:"#92400e"},
+  medium:{bg:"#dbeafe",color:"#1e40af"},
+  low:{bg:"#f3f4f6",color:"#6b7280"}
+};
+
+let filterProd = "all", filterStatus = "all";
+let pendingConfirm = null;
+let pwVisible = false;
+let isDark = false;
+let TRASH = [];
+let sheetOpen = false;
 
 /* ── Gate ── */
-function togglePw(){
-  pwVisible=!pwVisible;
-  const inp=document.getElementById("gate-pw");
-  const ico=document.getElementById("eye-icon");
-  inp.type=pwVisible?"text":"password";
-  ico.innerHTML=pwVisible
-    ?`<path d="M2 2l12 12M6.5 6.6A2 2 0 0 0 9.4 9.5M1 8s2.5-5 7-5c1.1 0 2.1.3 3 .7M15 8s-.9 1.8-2.5 3.2M5.5 12.5C6.3 12.8 7.1 13 8 13c4.5 0 7-5 7-5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>`
-    :`<path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.3"/>`;
+function togglePw() {
+  pwVisible = !pwVisible;
+  document.getElementById("gate-pw").type = pwVisible ? "text" : "password";
+  document.getElementById("eye-icon").innerHTML = pwVisible
+    ? `<path d="M2 2l12 12M6.5 6.6A2 2 0 0 0 9.4 9.5M1 8s2.5-5 7-5c1.1 0 2.1.3 3 .7M15 8s-.9 1.8-2.5 3.2M5.5 12.5C6.3 12.8 7.1 13 8 13c4.5 0 7-5 7-5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>`
+    : `<path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.3"/>`;
 }
 
-function checkPw(){
-  const val=document.getElementById("gate-pw").value;
-  const err=document.getElementById("gate-err");
-  const inp=document.getElementById("gate-pw");
-  if(val==="piggyadmin26"){
-    const gate=document.getElementById("gate");
-    gate.style.opacity="0";
-    setTimeout(()=>{
-      gate.style.display="none";
-      document.getElementById("admin").style.display="block";
+function checkPw() {
+  const val = document.getElementById("gate-pw").value;
+  if (val === "piggyadmin26") {
+    const gate = document.getElementById("gate");
+    gate.style.opacity = "0";
+    setTimeout(() => {
+      gate.style.display = "none";
+      document.getElementById("admin").style.display = "block";
+      initTrash();
       renderAll();
-    },300);
+    }, 300);
   } else {
-    err.classList.add("show");
+    document.getElementById("gate-err").classList.add("show");
+    const inp = document.getElementById("gate-pw");
     inp.classList.add("shake");
-    inp.value="";
-    setTimeout(()=>inp.classList.remove("shake"),400);
+    inp.value = "";
+    setTimeout(() => inp.classList.remove("shake"), 400);
     inp.focus();
   }
 }
 
-/* ── Persist & render ── */
-async function persist(){
-  const ctrl=new AbortController();
-  const timer=setTimeout(()=>ctrl.abort(),10000);
-  try{
-    const res=await fetch(API_BASE+'/save-data',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(DATA),
-      signal:ctrl.signal
+/* ── Theme ── */
+function toggleTheme() {
+  isDark = !isDark;
+  document.getElementById("admin").setAttribute("data-theme", isDark ? "dark" : "light");
+  document.getElementById("sheet").setAttribute("data-theme", isDark ? "dark" : "light");
+  document.getElementById("confirm-modal").setAttribute("data-theme", isDark ? "dark" : "light");
+  document.getElementById("reset-modal").setAttribute("data-theme", isDark ? "dark" : "light");
+  document.getElementById("theme-icon").innerHTML = isDark
+    ? `<circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M2.93 2.93l1.41 1.41M11.66 11.66l1.41 1.41M2.93 13.07l1.41-1.41M11.66 4.34l1.41-1.41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>`
+    : `<path d="M13.5 9.5A5.5 5.5 0 016 2a6 6 0 100 12 5.5 5.5 0 007.5-4.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+}
+
+/* ── Persist ── */
+async function persist() {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 10000);
+  try {
+    const res = await fetch(API_BASE + '/save-data', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(DATA),
+      signal: ctrl.signal
     });
-    if(!res.ok)throw new Error(`HTTP ${res.status}`);
-    const json=await res.json();
-    if(!json.ok)throw new Error(json.error||'Write failed');
-  }finally{
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    if (!json.ok) throw new Error(json.error || 'Write failed');
+  } finally {
     clearTimeout(timer);
   }
 }
 
-function allRows(){
-  const rows=[];
-  Object.keys(DATA).forEach(prod=>{
-    ["h1","h2"].forEach(half=>{
-      (DATA[prod][half]||[]).forEach((item,idx)=>{
-        rows.push({prod,half,idx,item});
+/* ── Rows ── */
+function allRows() {
+  const rows = [];
+  Object.keys(DATA).forEach(prod => {
+    ["h1","h2"].forEach(half => {
+      (DATA[prod][half] || []).forEach((item, idx) => {
+        rows.push({prod, half, idx, item});
       });
     });
   });
   return rows;
 }
 
-function renderStats(){
-  const rows=allRows();
-  const total=rows.length;
-  const done=rows.filter(r=>r.item.s==="done").length;
-  const indev=rows.filter(r=>r.item.s==="indev").length;
-  const blocked=rows.filter(r=>r.item.s==="blocked").length;
-  const notstarted=rows.filter(r=>r.item.s==="notstarted").length;
-  document.getElementById("stats-bar").innerHTML=`
-    <div class="stat-box"><b>${total}</b>Total items</div>
-    <div class="stat-box"><b style="color:#10b981">${done}</b>Done</div>
-    <div class="stat-box"><b style="color:#3b82f6">${indev}</b>In development</div>
-    <div class="stat-box"><b style="color:#f59e0b">${rows.filter(r=>r.item.s==="scoping").length}</b>Scoping</div>
-    <div class="stat-box"><b style="color:#6b7280">${notstarted}</b>Not started</div>
-    <div class="stat-box"><b style="color:#ef4444">${blocked}</b>Blocked</div>`;
+/* ── Analytics ── */
+function renderAnalytics() {
+  const rows = allRows();
+  const t = rows.length;
+  const counts = {done:0,indev:0,scoping:0,notstarted:0,blocked:0};
+  rows.forEach(r => { if (counts[r.item.s] !== undefined) counts[r.item.s]++; });
+  document.getElementById("analytics-bar").innerHTML = `
+    <div class="acard ac-total"><div class="acard-num">${t}</div><div class="acard-lbl">Total</div></div>
+    <div class="acard ac-done"><div class="acard-num">${counts.done}</div><div class="acard-lbl">Done</div></div>
+    <div class="acard ac-indev"><div class="acard-num">${counts.indev}</div><div class="acard-lbl">In dev</div></div>
+    <div class="acard ac-scoping"><div class="acard-num">${counts.scoping}</div><div class="acard-lbl">Scoping</div></div>
+    <div class="acard ac-notstarted"><div class="acard-num">${counts.notstarted}</div><div class="acard-lbl">Not started</div></div>
+    <div class="acard ac-blocked"><div class="acard-num">${counts.blocked}</div><div class="acard-lbl">Blocked</div></div>`;
 }
 
-function renderTable(){
-  const tbody=document.getElementById("tbl-body");
-  const rows=allRows().filter(r=>{
-    if(filterProd!=="all"&&r.prod!==filterProd)return false;
-    if(filterStatus!=="all"&&r.item.s!==filterStatus)return false;
+/* ── Table ── */
+function renderTable() {
+  const tbody = document.getElementById("tbl-body");
+  const rows = allRows().filter(r => {
+    if (filterProd !== "all" && r.prod !== filterProd) return false;
+    if (filterStatus !== "all" && r.item.s !== filterStatus) return false;
     return true;
   });
-  if(!rows.length){
-    tbody.innerHTML=`<tr class="empty-row"><td colspan="7">No items match the current filter.</td></tr>`;
+  if (!rows.length) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="7">No items match the current filter.</td></tr>`;
     return;
   }
-  tbody.innerHTML=rows.map(({prod,half,idx,item})=>`
-    <tr>
+  tbody.innerHTML = rows.map(({prod, half, idx, item}) => {
+    const sc = STATUS_COLORS[item.s] || {};
+    const pc = PRI_COLORS[item.p] || {};
+    return `<tr onclick="openSheet('${prod}','${half}',${idx})">
       <td>
         <div class="tbl-title">${esc(item.t)}</div>
-        ${item.d?`<div class="tbl-desc">${esc(item.d)}</div>`:""}
+        ${item.d ? `<div class="tbl-desc">${esc(item.d)}</div>` : ""}
       </td>
       <td><span class="badge b-${prod}">${PROD_NAMES[prod]}</span></td>
       <td><span class="badge ${half==="h1"?"b-h1":"b-h2"}">${half.toUpperCase()}</span></td>
       <td><span class="team-tag">${esc(item.team)}</span></td>
-      <td><span class="badge b-${item.p}">${PL[item.p]}</span></td>
-      <td><span class="badge b-${item.s}">${SL[item.s]}</span></td>
+      <td><span class="badge" style="background:${pc.bg};color:${pc.color}">${PL[item.p]}</span></td>
+      <td><span class="badge" style="background:${sc.bg};color:${sc.color}">${SL[item.s]}</span></td>
       <td>
-        <div class="tbl-actions">
-          <button class="btn btn-ghost btn-sm" onclick="openForm('${prod}','${half}',${idx})">Edit</button>
-          <button class="btn btn-danger btn-sm" onclick="openDel('${prod}','${half}',${idx})">Delete</button>
+        <div class="tbl-actions" onclick="event.stopPropagation()">
+          <button class="btn-icon" title="Edit" onclick="openSheet('${prod}','${half}',${idx})">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M11.5 2.5a1.5 1.5 0 012.1 2.1l-9 9L2 14l.4-2.6 9.1-9z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="btn-icon btn-icon-danger" title="Move to trash" onclick="promptMoveToTrash('${prod}','${half}',${idx})">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M6 4V2h4v2M5 4v9a1 1 0 001 1h4a1 1 0 001-1V4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
         </div>
       </td>
-    </tr>`).join("");
+    </tr>`;
+  }).join("");
 }
 
-function renderAll(){
-  renderStats();
+function renderAll() {
+  renderAnalytics();
   renderTable();
+  renderTrash();
 }
 
-function esc(s){
-  return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+function esc(s) {
+  return String(s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 
 /* ── Filters ── */
-function setFilter(type,val,el){
-  const group=document.querySelectorAll(`[data-filter-${type}]`);
-  group.forEach(p=>p.classList.remove("on"));
+function setFilter(type, val, el) {
+  document.querySelectorAll(`[data-filter-${type}]`).forEach(p => p.classList.remove("on"));
   el.classList.add("on");
-  if(type==="prod")filterProd=val;
-  else filterStatus=val;
+  if (type === "prod") filterProd = val;
+  else filterStatus = val;
   renderTable();
 }
 
-/* ── Add / Edit form ── */
-function openForm(prod,half,idx){
-  const isEdit=(prod!==undefined);
-  document.getElementById("form-modal-title").textContent=isEdit?"Edit item":"Add item";
-  document.getElementById("form-submit-btn").textContent=isEdit?"Save changes":"Add item";
-  document.getElementById("f-edit-prod").value=isEdit?prod:"";
-  document.getElementById("f-edit-half").value=isEdit?half:"";
-  document.getElementById("f-edit-idx").value=isEdit?idx:"";
+/* ── Side sheet ── */
+function openSheet(prod, half, idx) {
+  const isEdit = prod !== undefined;
+  document.getElementById("sheet-title").textContent = isEdit ? "Edit item" : "Add item";
+  document.getElementById("sheet-submit-btn").textContent = isEdit ? "Save changes" : "Add item";
+  document.getElementById("sheet-submit-btn").disabled = false;
 
-  if(isEdit){
-    const item=DATA[prod][half][idx];
-    document.getElementById("f-title").value=item.t||"";
-    document.getElementById("f-prod").value=prod;
-    document.getElementById("f-half").value=half;
-    document.getElementById("f-team").value=item.team||"";
-    document.getElementById("f-priority").value=item.p||"";
-    document.getElementById("f-status").value=item.s||"";
-    document.getElementById("f-desc").value=item.d||"";
-    document.getElementById("f-summary").value=item.summary||"";
-    document.getElementById("f-assumptions").value=(item.assumptions||[]).join("\n");
-    document.getElementById("f-risks").value=(item.risks||[]).join("\n");
-    document.getElementById("f-questions").value=(item.questions||[]).join("\n");
-    document.getElementById("f-notion").value=item.notion||"";
+  const ep = document.getElementById("s-edit-prod");
+  const eh = document.getElementById("s-edit-half");
+  const ei = document.getElementById("s-edit-idx");
+  ep.value = isEdit ? prod : "";
+  eh.value = isEdit ? half : "";
+  ei.value = isEdit ? idx : "";
+
+  if (isEdit) {
+    const item = DATA[prod][half][idx];
+    document.getElementById("s-title").value = item.t || "";
+    document.getElementById("s-prod").value = prod;
+    document.getElementById("s-half").value = half;
+    document.getElementById("s-team").value = item.team || "";
+    document.getElementById("s-priority").value = item.p || "";
+    document.getElementById("s-status").value = item.s || "";
+    document.getElementById("s-desc").value = item.d || "";
+    document.getElementById("s-assumptions").value = (item.assumptions || []).join("\n");
+    document.getElementById("s-risks").value = (item.risks || []).join("\n");
+    document.getElementById("s-notion").value = item.notion || "";
   } else {
-    document.getElementById("item-form").reset();
+    document.getElementById("sheet-form").reset();
+    ep.value = ""; eh.value = ""; ei.value = "";
   }
-  document.getElementById("form-modal").classList.add("open");
-  document.body.style.overflow="hidden";
-  setTimeout(()=>document.getElementById("f-title").focus(),60);
+
+  ["s-title","s-desc","s-assumptions","s-risks"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) updateCharCount(el);
+  });
+
+  updateSheetStrip();
+  document.getElementById("sheet-overlay").classList.add("open");
+  document.getElementById("sheet").classList.add("open");
+  document.body.style.overflow = "hidden";
+  sheetOpen = true;
+  setTimeout(() => document.getElementById("s-title").focus(), 60);
 }
 
-function closeForm(){
-  document.getElementById("form-modal").classList.remove("open");
-  document.body.style.overflow="";
+function closeSheet() {
+  document.getElementById("sheet-overlay").classList.remove("open");
+  document.getElementById("sheet").classList.remove("open");
+  document.body.style.overflow = "";
+  sheetOpen = false;
 }
 
-function closeFormBg(e){
-  if(e.target===document.getElementById("form-modal"))closeForm();
+function updateSheetStrip() {
+  const s = document.getElementById("s-status").value;
+  const p = document.getElementById("s-priority").value;
+  const strip = document.getElementById("sheet-status-strip");
+  let html = "";
+  if (s) {
+    const sc = STATUS_COLORS[s] || {};
+    html += `<span class="badge" style="background:${sc.bg};color:${sc.color};font-size:12px;padding:3px 10px">${SL[s]}</span>`;
+  }
+  if (p) {
+    const pc = PRI_COLORS[p] || {};
+    html += `<span class="badge" style="background:${pc.bg};color:${pc.color};font-size:12px;padding:3px 10px">${PL[p]}</span>`;
+  }
+  strip.innerHTML = html;
 }
 
-function splitLines(str){
-  return str.split("\n").map(s=>s.trim()).filter(Boolean);
+function splitLines(str) {
+  return str.split("\n").map(s => s.trim()).filter(Boolean);
 }
 
-async function saveItem(e){
+async function saveSheet(e) {
   e.preventDefault();
-  const editProd=document.getElementById("f-edit-prod").value;
-  const editHalf=document.getElementById("f-edit-half").value;
-  const editIdx=document.getElementById("f-edit-idx").value;
-  const isEdit=!!editProd;
+  const editProd = document.getElementById("s-edit-prod").value;
+  const editHalf = document.getElementById("s-edit-half").value;
+  const editIdx  = document.getElementById("s-edit-idx").value;
+  const isEdit   = !!editProd;
 
-  const newProd=document.getElementById("f-prod").value;
-  const newHalf=document.getElementById("f-half").value;
+  const newProd = document.getElementById("s-prod").value;
+  const newHalf = document.getElementById("s-half").value;
 
-  const item={
-    t:document.getElementById("f-title").value.trim(),
-    team:document.getElementById("f-team").value.trim(),
-    p:document.getElementById("f-priority").value,
-    s:document.getElementById("f-status").value,
-    d:document.getElementById("f-desc").value.trim(),
-    summary:document.getElementById("f-summary").value.trim(),
-    assumptions:splitLines(document.getElementById("f-assumptions").value),
-    risks:splitLines(document.getElementById("f-risks").value),
-    questions:splitLines(document.getElementById("f-questions").value),
-    notion:document.getElementById("f-notion").value.trim()||undefined
+  const existingItem = isEdit ? DATA[editProd][editHalf][parseInt(editIdx)] : null;
+
+  const item = {
+    t:           document.getElementById("s-title").value.trim(),
+    team:        document.getElementById("s-team").value.trim(),
+    p:           document.getElementById("s-priority").value,
+    s:           document.getElementById("s-status").value,
+    d:           document.getElementById("s-desc").value.trim(),
+    summary:     existingItem ? (existingItem.summary || "") : "",
+    assumptions: splitLines(document.getElementById("s-assumptions").value),
+    risks:       splitLines(document.getElementById("s-risks").value),
+    questions:   existingItem ? (existingItem.questions || []) : [],
+    notion:      document.getElementById("s-notion").value.trim() || undefined
   };
-  if(!item.notion)delete item.notion;
+  if (!item.notion) delete item.notion;
+  if (!item.summary) delete item.summary;
 
-  // Snapshot so we can roll back if the write fails
-  const snapshot=JSON.parse(JSON.stringify(DATA));
+  const snapshot = JSON.parse(JSON.stringify(DATA));
 
-  if(isEdit){
-    const sameBucket=(editProd===newProd&&editHalf===newHalf);
-    if(sameBucket){
-      DATA[editProd][editHalf][parseInt(editIdx)]=item;
+  if (isEdit) {
+    const sameBucket = (editProd === newProd && editHalf === newHalf);
+    if (sameBucket) {
+      DATA[editProd][editHalf][parseInt(editIdx)] = item;
     } else {
-      DATA[editProd][editHalf].splice(parseInt(editIdx),1);
-      if(!DATA[newProd][newHalf])DATA[newProd][newHalf]=[];
+      DATA[editProd][editHalf].splice(parseInt(editIdx), 1);
+      if (!DATA[newProd][newHalf]) DATA[newProd][newHalf] = [];
       DATA[newProd][newHalf].push(item);
     }
   } else {
-    if(!DATA[newProd][newHalf])DATA[newProd][newHalf]=[];
+    if (!DATA[newProd][newHalf]) DATA[newProd][newHalf] = [];
     DATA[newProd][newHalf].push(item);
   }
 
-  const btn=document.getElementById("form-submit-btn");
-  const origText=btn.textContent;
-  btn.disabled=true;
-  btn.textContent="Saving…";
+  const btn = document.getElementById("sheet-submit-btn");
+  const origText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "Saving…";
 
-  try{
+  try {
     await persist();
-    closeForm();
+    btn.disabled = false;
+    btn.textContent = origText;
+    closeSheet();
     renderAll();
-    toast(isEdit?"Changes saved":"Item added");
-  }catch(err){
-    Object.keys(snapshot).forEach(k=>DATA[k]=snapshot[k]);
-    btn.disabled=false;
-    btn.textContent=origText;
-    toast("Save failed — is the server running?");
+    showToast(isEdit ? "Changes saved" : "Item added", "success");
+  } catch(err) {
+    Object.keys(snapshot).forEach(k => DATA[k] = snapshot[k]);
+    btn.disabled = false;
+    btn.textContent = origText;
+    showToast("Save failed — is the server running?", "error");
   }
 }
 
-/* ── Delete ── */
-function openDel(prod,half,idx){
-  pendingDelete={prod,half,idx};
-  document.getElementById("del-name").textContent=DATA[prod][half][idx].t;
-  document.getElementById("del-modal").classList.add("open");
-  document.body.style.overflow="hidden";
+/* ── Char counters ── */
+function updateCharCount(el) {
+  const max = parseInt(el.dataset.max);
+  if (!max) return;
+  const len = el.value.length;
+  const countEl = document.getElementById("cc-" + el.id);
+  if (!countEl) return;
+  countEl.textContent = `${len}/${max}`;
+  countEl.className = "char-count" + (len >= max ? " over" : len >= max * 0.85 ? " warn" : "");
 }
 
-function closeDel(){
-  pendingDelete=null;
-  document.getElementById("del-modal").classList.remove("open");
-  document.body.style.overflow="";
+/* ── Trash ── */
+function initTrash() {
+  try {
+    const raw = localStorage.getItem(TRASH_KEY);
+    TRASH = raw ? JSON.parse(raw) : [];
+  } catch { TRASH = []; }
+  const now = Date.now();
+  TRASH = TRASH.filter(t => (now - t.deletedAt) < TRASH_TTL);
+  saveTrashStorage();
 }
 
-function closeDelBg(e){
-  if(e.target===document.getElementById("del-modal"))closeDel();
+function saveTrashStorage() {
+  try { localStorage.setItem(TRASH_KEY, JSON.stringify(TRASH)); } catch {}
 }
 
-async function confirmDelete(){
-  if(!pendingDelete)return;
-  const {prod,half,idx}=pendingDelete;
-  const name=DATA[prod][half][idx].t;
-  const removed=DATA[prod][half].splice(idx,1)[0];
+function toggleTrash() {
+  const wrap = document.getElementById("trash-wrap");
+  const chevron = document.getElementById("trash-chevron");
+  const isOpen = wrap.classList.contains("open");
+  wrap.classList.toggle("open", !isOpen);
+  chevron.classList.toggle("open", !isOpen);
+}
 
-  const btn=document.querySelector("#del-modal .btn-danger");
-  btn.disabled=true;
-  btn.textContent="Deleting…";
-
-  try{
-    await persist();
-    closeDel();
-    renderAll();
-    toast(`"${name}" deleted`);
-  }catch(err){
-    DATA[prod][half].splice(idx,0,removed);
-    btn.disabled=false;
-    btn.textContent="Delete";
-    toast("Delete failed — is the server running?");
+function renderTrash() {
+  const count = TRASH.length;
+  document.getElementById("trash-count").textContent = count;
+  const tbody = document.getElementById("trash-body");
+  if (!count) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="6" style="padding:28px 0">Trash is empty</td></tr>`;
+    return;
   }
+  const now = Date.now();
+  tbody.innerHTML = TRASH.map(t => {
+    const daysLeft = Math.max(0, Math.ceil((TRASH_TTL - (now - t.deletedAt)) / 86400000));
+    const deletedDate = new Date(t.deletedAt).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+    const pillClass = daysLeft <= 3 ? "days-soon" : "days-ok";
+    return `<tr>
+      <td><div class="tbl-title" style="opacity:.7">${esc(t.item.t)}</div></td>
+      <td><span class="badge b-${t.prod}">${PROD_NAMES[t.prod]}</span></td>
+      <td><span class="badge ${t.half==="h1"?"b-h1":"b-h2"}">${t.half.toUpperCase()}</span></td>
+      <td style="font-size:12px;color:var(--text-3)">${deletedDate}</td>
+      <td><span class="days-pill ${pillClass}">${daysLeft}d left</span></td>
+      <td>
+        <div class="tbl-actions">
+          <button class="btn btn-ghost" style="padding:4px 10px;font-size:12px" onclick="restoreItem('${t.id}')">Restore</button>
+          <button class="btn-icon btn-icon-danger" title="Delete permanently" onclick="promptPermanentDelete('${t.id}')">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M6 4V2h4v2M5 4v9a1 1 0 001 1h4a1 1 0 001-1V4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </td>
+    </tr>`;
+  }).join("");
+}
+
+function promptMoveToTrash(prod, half, idx) {
+  const name = DATA[prod][half][idx].t;
+  showConfirm({
+    title: "Move to trash?",
+    msg: `<strong>${esc(name)}</strong> will be moved to trash. You can restore it within 14 days.`,
+    okText: "Move to trash",
+    onConfirm: () => moveToTrash(prod, half, idx)
+  });
+}
+
+function moveToTrash(prod, half, idx) {
+  const item = DATA[prod][half][idx];
+  const trashEntry = {
+    id: String(Date.now()) + String(Math.random()).slice(2,6),
+    item: JSON.parse(JSON.stringify(item)),
+    prod, half,
+    deletedAt: Date.now()
+  };
+  TRASH.push(trashEntry);
+  DATA[prod][half].splice(idx, 1);
+  saveTrashStorage();
+
+  persist()
+    .then(() => {
+      renderAll();
+      showToast(`"${item.t}" moved to trash`, "info");
+    })
+    .catch(() => {
+      DATA[prod][half].splice(idx, 0, item);
+      TRASH.pop();
+      saveTrashStorage();
+      showToast("Delete failed — is the server running?", "error");
+    });
+}
+
+function restoreItem(id) {
+  const idx = TRASH.findIndex(t => t.id === id);
+  if (idx === -1) return;
+  const entry = TRASH[idx];
+  DATA[entry.prod][entry.half].push(entry.item);
+  TRASH.splice(idx, 1);
+  saveTrashStorage();
+
+  persist()
+    .then(() => {
+      renderAll();
+      showToast(`"${entry.item.t}" restored`, "success");
+    })
+    .catch(() => {
+      DATA[entry.prod][entry.half].pop();
+      TRASH.splice(idx, 0, entry);
+      saveTrashStorage();
+      renderAll();
+      showToast("Restore failed — is the server running?", "error");
+    });
+}
+
+function promptPermanentDelete(id) {
+  const entry = TRASH.find(t => t.id === id);
+  if (!entry) return;
+  showConfirm({
+    title: "Delete permanently?",
+    msg: `<strong>${esc(entry.item.t)}</strong> will be permanently deleted. This cannot be undone.`,
+    okText: "Delete permanently",
+    onConfirm: () => permanentDelete(id)
+  });
+}
+
+function permanentDelete(id) {
+  const idx = TRASH.findIndex(t => t.id === id);
+  if (idx === -1) return;
+  const name = TRASH[idx].item.t;
+  TRASH.splice(idx, 1);
+  saveTrashStorage();
+  renderTrash();
+  showToast(`"${name}" permanently deleted`, "info");
+}
+
+/* ── Confirm modal ── */
+function showConfirm({title, msg, okText, onConfirm}) {
+  document.getElementById("confirm-title").textContent = title;
+  document.getElementById("confirm-msg").innerHTML = msg;
+  document.getElementById("confirm-ok").textContent = okText || "Confirm";
+  pendingConfirm = onConfirm;
+  document.getElementById("confirm-modal").classList.add("open");
+}
+
+function closeConfirm() {
+  pendingConfirm = null;
+  document.getElementById("confirm-modal").classList.remove("open");
+}
+
+function closeConfirmBg(e) {
+  if (e.target === document.getElementById("confirm-modal")) closeConfirm();
+}
+
+function runConfirm() {
+  const fn = pendingConfirm;
+  closeConfirm();
+  if (fn) fn();
 }
 
 /* ── Reset ── */
-function confirmReset(){
+function showResetConfirm() {
   document.getElementById("reset-modal").classList.add("open");
-  document.body.style.overflow="hidden";
 }
 
-function closeReset(){
+function closeReset() {
   document.getElementById("reset-modal").classList.remove("open");
-  document.body.style.overflow="";
 }
 
-function closeResetBg(e){
-  if(e.target===document.getElementById("reset-modal"))closeReset();
-}
-
-async function doReset(){
-  const btn=document.querySelector("#reset-modal .btn-danger");
-  btn.disabled=true;
-  btn.textContent="Resetting…";
-  try{
-    const res=await fetch(API_BASE+'/reset-data',{method:'POST'});
-    const json=await res.json();
-    if(!json.ok)throw new Error(json.error);
+async function doReset() {
+  const btn = document.getElementById("reset-ok");
+  btn.disabled = true;
+  btn.textContent = "Resetting…";
+  try {
+    const res = await fetch(API_BASE + '/reset-data', {method: 'POST'});
+    const json = await res.json();
+    if (!json.ok) throw new Error(json.error);
     closeReset();
     location.reload();
-  }catch(err){
-    btn.disabled=false;
-    btn.textContent="Reset to defaults";
-    toast("Reset failed — is the server running?");
+  } catch(err) {
+    btn.disabled = false;
+    btn.textContent = "Reset to defaults";
+    showToast("Reset failed — is the server running?", "error");
   }
 }
 
 /* ── Toast ── */
-function toast(msg){
-  const el=document.getElementById("toast");
-  el.textContent=msg;
+let toastTimer = null;
+function showToast(msg, type = "info") {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.className = `toast toast-${type}`;
   el.classList.add("show");
-  setTimeout(()=>el.classList.remove("show"),2200);
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("show"), 2800);
 }
 
 /* ── Keyboard ── */
-document.addEventListener("keydown",e=>{
-  if(e.key==="Escape"){
-    closeForm();
-    closeDel();
-    closeReset();
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    if (document.getElementById("confirm-modal").classList.contains("open")) { closeConfirm(); return; }
+    if (document.getElementById("reset-modal").classList.contains("open")) { closeReset(); return; }
+    if (sheetOpen) { closeSheet(); return; }
   }
 });
 
