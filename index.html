@@ -134,8 +134,8 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#1
 .card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:7px}
 .card-title{font-size:13.5px;font-weight:600;color:var(--text-primary);line-height:1.4;flex:1;min-width:0}
 .st-pill{padding:3px 8px;border-radius:20px;font-size:10.5px;font-weight:600;flex-shrink:0;white-space:nowrap;margin-top:1px}
-.card-desc{font-size:12.5px;color:#555;line-height:1.65;margin-bottom:10px}
-[data-theme="dark"] .card-desc{color:#aaa}
+.card-desc{font-size:12.5px;color:#3a3a3a;line-height:1.65;margin-bottom:10px}
+[data-theme="dark"] .card-desc{color:#c4c4c0}
 .card-foot{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
 .team-tag{padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500;background:var(--chip-bg);color:var(--text-secondary)}
 .pr-badge{padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
@@ -225,6 +225,56 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#1
 .toast-info{background:#1e293b;color:#94a3b8}
 @keyframes toastIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 @keyframes toastOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(8px)}}
+
+/* VIEW TOGGLE */
+.view-toggle{display:flex;border:1px solid var(--border-panel);border-radius:8px;overflow:hidden;flex-shrink:0}
+.view-btn{padding:6px 14px;font-size:12.5px;font-weight:500;cursor:pointer;border:none;background:var(--bg-surface);color:var(--text-secondary);transition:background .12s,color .12s;white-space:nowrap;font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+.view-btn:not(:last-child){border-right:1px solid var(--border-panel)}
+.view-btn.active{background:var(--bg-card);color:var(--text-primary);font-weight:600}
+.view-btn:hover:not(.active){color:var(--text-primary);background:var(--chip-bg)}
+
+/* TIMELINE */
+.tl-filter-bar{padding:10px 22px;border-top:1px solid var(--border-controls);border-bottom:1px solid var(--border-controls);background:var(--bg-controls);display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.tl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tl-inner{min-width:700px}
+.tl-header-row{display:flex;align-items:stretch;background:var(--bg-surface);border-bottom:2px solid var(--border-controls);position:sticky;top:0;z-index:10}
+.tl-label-col{width:220px;min-width:220px;flex-shrink:0;padding:8px 14px;font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;border-right:1px solid var(--border-controls);display:flex;align-items:center}
+.tl-chart-col{flex:1;overflow:hidden}
+.tl-q-cells{display:flex;height:100%}
+.tl-q-cell{flex:1;text-align:center;padding:8px 4px;font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;border-right:1px solid var(--border-controls)}
+.tl-q-cell:last-child{border-right:none}
+.tl-group{border-bottom:1px solid var(--border-half)}
+.tl-group-hdr{display:flex;align-items:center;gap:10px;padding:8px 14px;cursor:pointer;background:var(--bg-surface);border-bottom:1px solid var(--border-controls);user-select:none;transition:background .12s}
+.tl-group-hdr:hover{background:var(--chip-bg)}
+.tl-group-chevron{font-size:9px;color:var(--text-muted);width:14px;flex-shrink:0;transition:transform .2s;display:inline-block}
+.tl-group-chevron.open{transform:rotate(90deg)}
+.tl-group-name{font-size:12.5px;font-weight:600;color:var(--text-primary)}
+.tl-group-count{font-size:11px;color:var(--text-muted)}
+.tl-group-rows.collapsed{display:none}
+.tl-row{display:flex;align-items:stretch;border-bottom:1px solid var(--border-half)}
+.tl-row:last-child{border-bottom:none}
+.tl-row:nth-child(even){background:var(--bg-surface)}
+.tl-row-label{width:220px;min-width:220px;flex-shrink:0;padding:7px 14px;font-size:12px;font-weight:500;color:var(--text-primary);line-height:1.4;border-right:1px solid var(--border-controls);display:flex;flex-direction:column;justify-content:center}
+.tl-row-meta{font-size:10px;font-weight:500;color:var(--text-muted);margin-top:2px}
+.tl-chart-area{flex:1;position:relative;min-height:36px;background-image:linear-gradient(to bottom,var(--border-controls),var(--border-controls)),linear-gradient(to bottom,var(--border-controls),var(--border-controls)),linear-gradient(to bottom,var(--border-controls),var(--border-controls));background-size:1px 100%,1px 100%,1px 100%;background-position:24.66% 0,49.59% 0,74.79% 0;background-repeat:no-repeat}
+.tl-bar{position:absolute;top:50%;transform:translateY(-50%);height:20px;border-radius:4px;cursor:pointer;display:flex;align-items:center;padding:0 7px;overflow:hidden;transition:filter .15s,box-shadow .15s;z-index:1;background:#94a3b8}
+.tl-bar[data-s="done"]{background:#10b981}
+.tl-bar[data-s="indev"]{background:#3b82f6}
+.tl-bar[data-s="scoping"]{background:#f59e0b}
+.tl-bar[data-s="notstarted"]{background:#94a3b8}
+.tl-bar[data-s="blocked"]{background:#ef4444}
+.tl-bar:hover{filter:brightness(1.12);box-shadow:0 2px 10px rgba(0,0,0,.3)}
+.tl-bar-text{font-size:10.5px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.tl-unsched{border-top:2px solid var(--border-controls)}
+.tl-unsched-hdr{display:flex;align-items:center;gap:10px;padding:8px 14px;cursor:pointer;background:var(--bg-surface);border-bottom:1px solid var(--border-controls);user-select:none;transition:background .12s}
+.tl-unsched-hdr:hover{background:var(--chip-bg)}
+.tl-unsched-body{padding:12px 22px;display:flex;flex-direction:column;gap:6px}
+.tl-unsched-body.collapsed{display:none}
+.tl-unsched-item{padding:8px 12px;border-radius:8px;border:1px solid var(--border-card);background:var(--bg-card);cursor:pointer;display:flex;align-items:center;gap:8px;transition:box-shadow .12s}
+.tl-unsched-item:hover{box-shadow:0 1px 8px rgba(0,0,0,.1)}
+.tl-unsched-title{font-size:12.5px;font-weight:500;color:var(--text-primary);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tl-unsched-meta{display:flex;gap:5px;align-items:center;flex-shrink:0}
+.tl-empty{padding:24px;text-align:center;color:var(--text-muted);font-size:13px}
 </style>
 
 <div id="gate">
@@ -255,11 +305,17 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#1
       <h1>Piggytech 2026 product roadmap</h1>
       <p>Prepared by Product — Efe Ogufere &nbsp;·&nbsp; April 2026 &nbsp;·&nbsp; Internal &amp; Confidential</p>
     </div>
-    <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">
-      <svg id="theme-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 9.5A5.5 5.5 0 016 2a6 6 0 100 12 5.5 5.5 0 007.5-4.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
+    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+      <div class="view-toggle">
+        <button class="view-btn active" id="view-btn-board" onclick="switchView('board')">Board</button>
+        <button class="view-btn" id="view-btn-timeline" onclick="switchView('timeline')">Timeline</button>
+      </div>
+      <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+        <svg id="theme-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 9.5A5.5 5.5 0 016 2a6 6 0 100 12 5.5 5.5 0 007.5-4.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
   </div>
-  <div class="tabs-wrap">
+  <div class="tabs-wrap" id="tabs-wrap-el">
     <div class="tabs" id="tabs">
       <div class="tab active" data-tab="pv" onclick="switchTab('pv')"><span class="tab-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="4" width="14" height="10" rx="2" stroke="#2563eb" stroke-width="1.5"/><path d="M5 4V3a2 2 0 0 1 4 0v1" stroke="#2563eb" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="9" r="1.5" fill="#2563eb"/></svg></span>Piggyvest</div>
       <div class="tab" data-tab="pa" onclick="switchTab('pa')"><span class="tab-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3.5" y="1" width="9" height="14" rx="2" stroke="#7c3aed" stroke-width="1.5"/><circle cx="8" cy="12" r="1" fill="#7c3aed"/><path d="M6 3.5h4" stroke="#7c3aed" stroke-width="1.5" stroke-linecap="round"/></svg></span>PocketApp</div>
@@ -278,30 +334,68 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#1
         </button>
       </div>
     </div>
-    <div class="product-panel active" id="panel-pv"></div>
-    <div class="product-panel" id="panel-pa"></div>
-    <div class="product-panel" id="panel-pvb"></div>
-    <div class="product-panel" id="panel-pmd"></div>
-    <div class="product-panel" id="panel-plat"></div>
-    <div class="legend-bar">
-      <span class="l-lbl">Priority</span>
-      <div class="l-grp">
-        <span class="l-item"><span class="l-dot" style="background:#ef4444"></span>Critical</span>
-        <span class="l-item"><span class="l-dot" style="background:#f59e0b"></span>High</span>
-        <span class="l-item"><span class="l-dot" style="background:#3b82f6"></span>Medium</span>
-        <span class="l-item"><span class="l-dot" style="background:#6b7280"></span>Low</span>
+    <div id="board-view">
+      <div class="product-panel active" id="panel-pv"></div>
+      <div class="product-panel" id="panel-pa"></div>
+      <div class="product-panel" id="panel-pvb"></div>
+      <div class="product-panel" id="panel-pmd"></div>
+      <div class="product-panel" id="panel-plat"></div>
+      <div class="legend-bar">
+        <span class="l-lbl">Priority</span>
+        <div class="l-grp">
+          <span class="l-item"><span class="l-dot" style="background:#ef4444"></span>Critical</span>
+          <span class="l-item"><span class="l-dot" style="background:#f59e0b"></span>High</span>
+          <span class="l-item"><span class="l-dot" style="background:#3b82f6"></span>Medium</span>
+          <span class="l-item"><span class="l-dot" style="background:#6b7280"></span>Low</span>
+        </div>
+        <span class="l-sep"></span>
+        <span class="l-lbl">Status</span>
+        <div class="l-grp">
+          <span class="l-item"><span class="l-dot" style="background:#10b981"></span>Done</span>
+          <span class="l-item"><span class="l-dot" style="background:#3b82f6"></span>In development</span>
+          <span class="l-item"><span class="l-dot" style="background:#f59e0b"></span>Scoping &amp; design</span>
+          <span class="l-item"><span class="l-dot" style="background:#6b7280"></span>Not started</span>
+          <span class="l-item"><span class="l-dot" style="background:#ef4444"></span>Blocked</span>
+        </div>
+        <span class="l-sep"></span>
+        <span class="l-item" style="font-size:11px;color:var(--text-muted)">Click any card for details</span>
       </div>
-      <span class="l-sep"></span>
-      <span class="l-lbl">Status</span>
-      <div class="l-grp">
-        <span class="l-item"><span class="l-dot" style="background:#10b981"></span>Done</span>
-        <span class="l-item"><span class="l-dot" style="background:#3b82f6"></span>In development</span>
-        <span class="l-item"><span class="l-dot" style="background:#f59e0b"></span>Scoping &amp; design</span>
-        <span class="l-item"><span class="l-dot" style="background:#6b7280"></span>Not started</span>
-        <span class="l-item"><span class="l-dot" style="background:#ef4444"></span>Blocked</span>
+    </div>
+    <div id="timeline-view" style="display:none">
+      <div class="tl-filter-bar">
+        <span class="filter-lbl">Product</span>
+        <span class="pill tl-prod-pill f-all on" onclick="setTlFilter('prod','all',this)">All</span>
+        <span class="pill tl-prod-pill f-all" onclick="setTlFilter('prod','pv',this)">Piggyvest</span>
+        <span class="pill tl-prod-pill f-all" onclick="setTlFilter('prod','pa',this)">PocketApp</span>
+        <span class="pill tl-prod-pill f-all" onclick="setTlFilter('prod','pvb',this)">PVB</span>
+        <span class="pill tl-prod-pill f-all" onclick="setTlFilter('prod','pmd',this)">Pocket Merchant</span>
+        <span class="pill tl-prod-pill f-all" onclick="setTlFilter('prod','plat',this)">Platform</span>
+        <span class="l-sep"></span>
+        <span class="filter-lbl">Status</span>
+        <span class="pill tl-status-pill f-all on" onclick="setTlFilter('status','all',this)">All</span>
+        <span class="pill tl-status-pill f-done" onclick="setTlFilter('status','done',this)">Done</span>
+        <span class="pill tl-status-pill f-indev" onclick="setTlFilter('status','indev',this)">In development</span>
+        <span class="pill tl-status-pill f-scoping" onclick="setTlFilter('status','scoping',this)">Scoping</span>
+        <span class="pill tl-status-pill f-notstarted" onclick="setTlFilter('status','notstarted',this)">Not started</span>
+        <span class="pill tl-status-pill f-blocked" onclick="setTlFilter('status','blocked',this)">Blocked</span>
       </div>
-      <span class="l-sep"></span>
-      <span class="l-item" style="font-size:11px;color:var(--text-muted)">Click any card for details</span>
+      <div class="tl-scroll">
+        <div class="tl-inner">
+          <div class="tl-header-row">
+            <div class="tl-label-col">Item</div>
+            <div class="tl-chart-col">
+              <div class="tl-q-cells">
+                <div class="tl-q-cell">Q1 2026</div>
+                <div class="tl-q-cell">Q2 2026</div>
+                <div class="tl-q-cell">Q3 2026</div>
+                <div class="tl-q-cell">Q4 2026</div>
+              </div>
+            </div>
+          </div>
+          <div id="tl-groups"></div>
+          <div id="tl-unscheduled"></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -359,6 +453,11 @@ const PL={critical:"Critical",high:"High",medium:"Medium",low:"Low"};
 let activeTab="pv", isDark=false, pwVisible=false;
 let indexSearch="";
 const activeFilters={};
+let currentView='board';
+let tlFilterProd='all', tlFilterStatus='all';
+const tlGroupOpen={pv:true,pa:true,pvb:true,pmd:true,plat:true};
+let tlUnschedOpen=true;
+const TL_COLORS={done:'#10b981',indev:'#3b82f6',scoping:'#f59e0b',notstarted:'#94a3b8',blocked:'#ef4444'};
 
 function togglePw(){
   pwVisible=!pwVisible;
@@ -528,14 +627,16 @@ function applyCardFilters(id) {
 function onIndexSearch(val) {
   indexSearch = val;
   document.getElementById("index-search-clear").style.display = val ? "flex" : "none";
-  applyCardFilters(activeTab);
+  if(currentView==='timeline') renderTimeline();
+  else applyCardFilters(activeTab);
 }
 
 function clearIndexSearch() {
   indexSearch = "";
   document.getElementById("index-search").value = "";
   document.getElementById("index-search-clear").style.display = "none";
-  applyCardFilters(activeTab);
+  if(currentView==='timeline') renderTimeline();
+  else applyCardFilters(activeTab);
 }
 
 function switchTab(tab){
@@ -610,6 +711,120 @@ function closeModal(){
 
 function closeModalBg(e){
   if(e.target===document.getElementById("modal-bg"))closeModal();
+}
+
+function switchView(mode){
+  currentView=mode;
+  document.getElementById('board-view').style.display=mode==='board'?'':'none';
+  document.getElementById('timeline-view').style.display=mode==='timeline'?'':'none';
+  document.getElementById('tabs-wrap-el').style.display=mode==='board'?'':'none';
+  document.getElementById('view-btn-board').classList.toggle('active',mode==='board');
+  document.getElementById('view-btn-timeline').classList.toggle('active',mode==='timeline');
+  if(mode==='timeline')renderTimeline();
+}
+
+function setTlFilter(type,val,pill){
+  document.querySelectorAll(type==='prod'?'.tl-prod-pill':'.tl-status-pill').forEach(p=>p.classList.remove('on'));
+  pill.classList.add('on');
+  if(type==='prod')tlFilterProd=val; else tlFilterStatus=val;
+  renderTimeline();
+}
+
+function dateToX(dateStr,isEnd){
+  if(!dateStr)return isEnd?100:0;
+  const start=Date.UTC(2026,0,1);
+  const end=Date.UTC(2027,0,1);
+  const pts=dateStr.split('-').map(Number);
+  let d=Date.UTC(pts[0],pts[1]-1,pts[2]);
+  if(isEnd)d+=86400000;
+  return((Math.max(start,Math.min(end,d))-start)/(end-start))*100;
+}
+
+function renderTimeline(){
+  const groups=document.getElementById('tl-groups');
+  const unsched=document.getElementById('tl-unscheduled');
+  if(!groups||!unsched)return;
+  const q=indexSearch.trim().toLowerCase();
+  const prodsToShow=tlFilterProd==='all'?Object.keys(PRODUCTS):[tlFilterProd];
+  let gHTML='';
+  const unschedItems=[];
+
+  prodsToShow.forEach(pid=>{
+    const prod=PRODUCTS[pid];
+    const rows=[];
+    ['h1','h2'].forEach(half=>{
+      (DATA[pid][half]||[]).forEach((item,idx)=>{
+        if(q&&!item.t.toLowerCase().includes(q))return;
+        if(tlFilterStatus!=='all'&&item.s!==tlFilterStatus)return;
+        if(item.startDate&&item.endDate)rows.push({item,idx,half});
+        else unschedItems.push({item,idx,half,pid});
+      });
+    });
+    const isOpen=tlGroupOpen[pid]!==false;
+    const rowsHTML=rows.length===0
+      ?`<div class="tl-empty">No scheduled items${tlFilterStatus!=='all'||q?' match filters':''}</div>`
+      :rows.map(({item,idx,half})=>{
+          const lx=dateToX(item.startDate,false);
+          const rx=dateToX(item.endDate,true);
+          const w=Math.max(rx-lx,0.5);
+          return `<div class="tl-row">
+            <div class="tl-row-label"><div>${item.t}</div><div class="tl-row-meta">${half.toUpperCase()} · ${item.team}</div></div>
+            <div class="tl-chart-area">
+              <div class="tl-bar" data-s="${item.s}" style="left:${lx.toFixed(2)}%;width:${w.toFixed(2)}%" onclick="openModal('${pid}','${half}',${idx})" title="${item.t}">
+                <span class="tl-bar-text">${item.t}</span>
+              </div>
+            </div>
+          </div>`;
+        }).join('');
+    gHTML+=`<div class="tl-group" id="tl-group-${pid}">
+      <div class="tl-group-hdr" onclick="toggleTlGroup('${pid}')">
+        <span class="tl-group-chevron${isOpen?' open':''}" id="tl-chev-${pid}">▶</span>
+        <span class="tl-group-name">${prod.name}</span>
+        <span class="tl-group-count">${rows.length} scheduled item${rows.length!==1?'s':''}</span>
+      </div>
+      <div class="tl-group-rows${isOpen?'':' collapsed'}" id="tl-rows-${pid}">${rowsHTML}</div>
+    </div>`;
+  });
+
+  groups.innerHTML=gHTML||'<div class="tl-empty">No items match the current filters</div>';
+
+  const unOpen=tlUnschedOpen!==false;
+  unsched.innerHTML=`<div class="tl-unsched">
+    <div class="tl-unsched-hdr" onclick="toggleTlUnscheduled()">
+      <span class="tl-group-chevron${unOpen?' open':''}" id="tl-unsched-chev">▶</span>
+      <span class="tl-group-name">Unscheduled items</span>
+      <span class="tl-group-count">${unschedItems.length} item${unschedItems.length!==1?'s':''}</span>
+    </div>
+    <div class="tl-unsched-body${unOpen?'':' collapsed'}" id="tl-unsched-body">
+      ${unschedItems.length===0
+        ?'<div class="tl-empty">All items have scheduled dates</div>'
+        :unschedItems.map(({item,idx,half,pid})=>`<div class="tl-unsched-item" onclick="openModal('${pid}','${half}',${idx})">
+            <span style="width:8px;height:8px;border-radius:50%;background:${TL_COLORS[item.s]||'#94a3b8'};flex-shrink:0;display:inline-block"></span>
+            <span class="tl-unsched-title">${item.t}</span>
+            <div class="tl-unsched-meta">
+              <span class="st-pill ${SC[item.s]}" style="font-size:10px;padding:2px 7px">${SL[item.s]}</span>
+              <span class="team-tag" style="font-size:10.5px">${PRODUCTS[pid].name}</span>
+            </div>
+          </div>`).join('')
+      }
+    </div>
+  </div>`;
+}
+
+function toggleTlGroup(pid){
+  tlGroupOpen[pid]=!tlGroupOpen[pid];
+  const rows=document.getElementById('tl-rows-'+pid);
+  const chev=document.getElementById('tl-chev-'+pid);
+  if(rows)rows.classList.toggle('collapsed',!tlGroupOpen[pid]);
+  if(chev)chev.classList.toggle('open',!!tlGroupOpen[pid]);
+}
+
+function toggleTlUnscheduled(){
+  tlUnschedOpen=!tlUnschedOpen;
+  const body=document.getElementById('tl-unsched-body');
+  const chev=document.getElementById('tl-unsched-chev');
+  if(body)body.classList.toggle('collapsed',!tlUnschedOpen);
+  if(chev)chev.classList.toggle('open',!!tlUnschedOpen);
 }
 
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
