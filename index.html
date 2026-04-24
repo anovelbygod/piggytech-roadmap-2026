@@ -76,6 +76,14 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#1
 .product-panel{display:none}
 .product-panel.active{display:block}
 
+/* INDEX SEARCH */
+.index-search-wrap{padding:10px 22px 0;background:var(--bg-panel);border-top:1px solid var(--border-controls)}
+.index-search-inner{display:flex;align-items:center;gap:8px;background:var(--bg-surface);border:1px solid var(--border-card);border-radius:8px;padding:7px 12px}
+.index-search-inner input{flex:1;border:none;background:transparent;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:13px;color:var(--text-primary);outline:none}
+.index-search-inner input::placeholder{color:var(--text-muted)}
+#index-search-clear{border:none;background:none;cursor:pointer;color:var(--text-muted);display:flex;align-items:center;padding:0}
+#index-search-clear:hover{color:var(--text-primary)}
+
 .product-hero{padding:18px 22px 16px;transition:background .2s}
 .hero-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .hero-left{display:flex;align-items:center;gap:11px}
@@ -188,11 +196,9 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#1
 .modal-list li::before{content:"";width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:7px;background:#3a3a37}
 .modal-list.risks li::before{background:#7f1d1d}
 .modal-list.assumptions li::before{background:#1e3a5f}
-.modal-list.questions li::before{background:#3a2e00}
 [data-theme="light"] .modal-list li::before{background:#d1d5db}
 [data-theme="light"] .modal-list.risks li::before{background:#fca5a5}
 [data-theme="light"] .modal-list.assumptions li::before{background:#93c5fd}
-[data-theme="light"] .modal-list.questions li::before{background:#fde047}
 .modal-notion-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;border:1px solid var(--border-card);background:var(--bg-surface);font-size:12.5px;font-weight:500;color:var(--text-secondary);text-decoration:none;margin-top:4px}
 .modal-notion-btn:hover{border-color:#888}
 </style>
@@ -239,6 +245,15 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#1
     </div>
   </div>
   <div class="panel-wrap">
+    <div class="index-search-wrap">
+      <div class="index-search-inner">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="color:var(--text-muted);flex-shrink:0"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <input type="text" id="index-search" placeholder="Search by title…" oninput="onIndexSearch(this.value)">
+        <button id="index-search-clear" onclick="clearIndexSearch()" style="display:none">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
     <div class="product-panel active" id="panel-pv"></div>
     <div class="product-panel" id="panel-pa"></div>
     <div class="product-panel" id="panel-pvb"></div>
@@ -296,8 +311,9 @@ const BC={done:"bar-done",indev:"bar-indev",scoping:"bar-scoping",notstarted:"ba
 const PC={critical:"pr-critical",high:"pr-high",medium:"pr-medium",low:"pr-low"};
 const PL={critical:"Critical",high:"High",medium:"Medium",low:"Low"};
 
-
 let activeTab="pv", isDark=false, pwVisible=false;
+let indexSearch="";
+const activeFilters={};
 
 function togglePw(){
   pwVisible=!pwVisible;
@@ -313,7 +329,7 @@ function checkPw(){
   const val=document.getElementById("gate-pw").value;
   const err=document.getElementById("gate-err");
   const inp=document.getElementById("gate-pw");
-  if(val==="piggyadmin26"){
+  if(val==="piggy2026"){
     const gate=document.getElementById("gate");
     gate.style.opacity="0";
     setTimeout(()=>{
@@ -397,12 +413,12 @@ function buildPanel(id){
     </div>
     <div class="controls" id="ctrl-${id}">
       <span class="filter-lbl">Filter</span>
-      <span class="pill f-all on" onclick="filterStatus(this,'${id}','all')">All</span>
-      <span class="pill f-done" onclick="filterStatus(this,'${id}','done')">Done</span>
-      <span class="pill f-indev" onclick="filterStatus(this,'${id}','indev')">In development</span>
-      <span class="pill f-scoping" onclick="filterStatus(this,'${id}','scoping')">Scoping</span>
-      <span class="pill f-notstarted" onclick="filterStatus(this,'${id}','notstarted')">Not started</span>
-      <span class="pill f-blocked" onclick="filterStatus(this,'${id}','blocked')">Blocked</span>
+      <span class="pill f-all on" onclick="applyFilter(this,'${id}','all')">All</span>
+      <span class="pill f-done" onclick="applyFilter(this,'${id}','done')">Done</span>
+      <span class="pill f-indev" onclick="applyFilter(this,'${id}','indev')">In development</span>
+      <span class="pill f-scoping" onclick="applyFilter(this,'${id}','scoping')">Scoping</span>
+      <span class="pill f-notstarted" onclick="applyFilter(this,'${id}','notstarted')">Not started</span>
+      <span class="pill f-blocked" onclick="applyFilter(this,'${id}','blocked')">Blocked</span>
     </div>
     <div class="half-section">
       <div class="half-header"><span class="half-badge h1b">H1 2026</span><span class="count-chip" id="cnt-${id}-h1"></span></div>
@@ -425,19 +441,43 @@ function updateCounts(id){
   });
 }
 
-function filterStatus(pill,id,val){
+function applyFilter(pill, id, val) {
   document.getElementById("ctrl-"+id).querySelectorAll(".pill").forEach(p=>p.classList.remove("on"));
   pill.classList.add("on");
-  document.getElementById("panel-"+id).querySelectorAll(".card").forEach(c=>{
-    c.style.display=(val==="all"||c.dataset.s===val)?"":"none";
+  activeFilters[id] = val;
+  applyCardFilters(id);
+}
+
+function applyCardFilters(id) {
+  const status = activeFilters[id] || "all";
+  const q = indexSearch.trim().toLowerCase();
+  document.getElementById("panel-"+id).querySelectorAll(".card").forEach(c => {
+    const statusOk = status === "all" || c.dataset.s === status;
+    const titleEl = c.querySelector(".card-title");
+    const searchOk = !q || (titleEl && titleEl.textContent.toLowerCase().includes(q));
+    c.style.display = (statusOk && searchOk) ? "" : "none";
   });
   updateCounts(id);
+}
+
+function onIndexSearch(val) {
+  indexSearch = val;
+  document.getElementById("index-search-clear").style.display = val ? "flex" : "none";
+  applyCardFilters(activeTab);
+}
+
+function clearIndexSearch() {
+  indexSearch = "";
+  document.getElementById("index-search").value = "";
+  document.getElementById("index-search-clear").style.display = "none";
+  applyCardFilters(activeTab);
 }
 
 function switchTab(tab){
   activeTab=tab;
   document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab===tab));
   document.querySelectorAll(".product-panel").forEach(p=>p.classList.toggle("active",p.id==="panel-"+tab));
+  applyCardFilters(tab);
 }
 
 function openModal(prod,half,idx){
@@ -447,10 +487,9 @@ function openModal(prod,half,idx){
   document.getElementById("m-title").textContent=item.t;
   document.getElementById("m-badges").innerHTML=`<span class="st-pill ${SC[item.s]}">${SL[item.s]}</span><span class="pr-badge ${PC[item.p]}" style="padding:3px 9px;border-radius:20px;font-size:11px">${PL[item.p]}</span><span class="team-tag">${item.team}</span>`;
   let html="";
-  html+=`<div class="modal-section"><div class="modal-section-title">Summary</div><div class="modal-text">${item.summary||item.d}</div></div>`;
+  if(item.d)html+=`<div class="modal-section"><div class="modal-section-title">Description</div><div class="modal-text">${item.d}</div></div>`;
   if(item.assumptions&&item.assumptions.length)html+=`<div class="modal-section"><div class="modal-section-title">Assumptions</div><ul class="modal-list assumptions">${item.assumptions.map(a=>`<li>${a}</li>`).join("")}</ul></div>`;
-  if(item.risks&&item.risks.length)html+=`<div class="modal-section"><div class="modal-section-title">Risks & watch points</div><ul class="modal-list risks">${item.risks.map(r=>`<li>${r}</li>`).join("")}</ul></div>`;
-  if(item.questions&&item.questions.length)html+=`<div class="modal-section"><div class="modal-section-title">Open questions</div><ul class="modal-list questions">${item.questions.map(q=>`<li>${q}</li>`).join("")}</ul></div>`;
+  if(item.risks&&item.risks.length)html+=`<div class="modal-section"><div class="modal-section-title">Risks &amp; watch points</div><ul class="modal-list risks">${item.risks.map(r=>`<li>${r}</li>`).join("")}</ul></div>`;
   if(item.notion)html+=`<div class="modal-section"><a class="modal-notion-btn" href="${item.notion}" target="_blank">View full doc in Notion ↗</a></div>`;
   document.getElementById("m-body").innerHTML=html;
   document.getElementById("modal-bg").classList.add("open");
