@@ -201,6 +201,29 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#1
 [data-theme="light"] .modal-list.assumptions li::before{background:#93c5fd}
 .modal-notion-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;border:1px solid var(--border-card);background:var(--bg-surface);font-size:12.5px;font-weight:500;color:var(--text-secondary);text-decoration:none;margin-top:4px}
 .modal-notion-btn:hover{border-color:#888}
+
+/* STAR */
+.star-btn{background:none;border:none;cursor:pointer;font-size:15px;line-height:1;padding:1px 3px;color:var(--text-muted);transition:color .12s,transform .12s;flex-shrink:0}
+.star-btn:hover{color:#f59e0b;transform:scale(1.15)}
+.star-btn.starred{color:#f59e0b}
+.card-starred{outline:1.5px solid rgba(245,158,11,.35)!important}
+.card-starred .card-body{background:rgba(255,252,232,.7)!important}
+[data-theme="dark"] .card-starred .card-body{background:rgba(100,65,0,.15)!important}
+
+/* DATES */
+.card-dates{font-size:10.5px;color:var(--text-muted);display:flex;align-items:center;gap:3px;white-space:nowrap}
+.overdue-tag{font-size:10px;font-weight:600;padding:1px 6px;border-radius:20px;background:#fee2e2;color:#991b1b;white-space:nowrap}
+[data-theme="dark"] .overdue-tag{background:#3a0a0a;color:#fca5a5}
+
+/* TOASTS */
+#toast-container{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{padding:11px 16px;border-radius:10px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,0,0,.2);animation:toastIn .25s cubic-bezier(.4,0,.2,1)}
+.toast.out{animation:toastOut .25s cubic-bezier(.4,0,.2,1) forwards}
+.toast-success{background:#064e3b;color:#6ee7b7}
+.toast-error{background:#7f1d1d;color:#fca5a5}
+.toast-info{background:#1e293b;color:#94a3b8}
+@keyframes toastIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes toastOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(8px)}}
 </style>
 
 <div id="gate">
@@ -295,8 +318,29 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#1
   </div>
 </div>
 
+<div id="toast-container"></div>
+
 <script src="data.js"></script>
 <script>
+const API_BASE = 'http://localhost:8080';
+
+async function persist() {
+  const res = await fetch(API_BASE + '/save-data', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(DATA)
+  });
+  if (!res.ok) throw new Error('Save failed');
+}
+
+function showToast(msg, type="info") {
+  const container = document.getElementById("toast-container");
+  const el = document.createElement("div");
+  el.className = `toast toast-${type}`;
+  el.textContent = msg;
+  container.appendChild(el);
+  setTimeout(() => { el.classList.add("out"); setTimeout(() => el.remove(), 300); }, 3000);
+}
+
 const PRODUCTS={
   pv:{name:"Piggyvest",desc:"Consumer savings & investments",heroLight:"#eff6ff",heroDark:"#0d1520",icon:`<svg width="20" height="20" viewBox="0 0 16 16" fill="none"><rect x="1" y="4" width="14" height="10" rx="2" stroke="#2563eb" stroke-width="1.5"/><path d="M5 4V3a2 2 0 0 1 4 0v1" stroke="#2563eb" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="9" r="1.5" fill="#2563eb"/></svg>`},
   pa:{name:"PocketApp",desc:"Consumer payments app",heroLight:"#f5f3ff",heroDark:"#130f20",icon:`<svg width="20" height="20" viewBox="0 0 16 16" fill="none"><rect x="3.5" y="1" width="9" height="14" rx="2" stroke="#7c3aed" stroke-width="1.5"/><circle cx="8" cy="12" r="1" fill="#7c3aed"/><path d="M6 3.5h4" stroke="#7c3aed" stroke-width="1.5" stroke-linecap="round"/></svg>`},
@@ -371,17 +415,33 @@ function updateHeroBgs(){
 function mkCard(item,idx,prod,half){
   const sc=item.s;
   const tint=sc==="done"?"tint-done":sc==="blocked"?"tint-blocked":"";
-  return `<div class="card ${tint}" data-s="${sc}" onclick="openModal('${prod}','${half}',${idx})">
+  const starredClass=item.starred?" card-starred":"";
+  const today=new Date().toISOString().split("T")[0];
+  const isOverdue=item.endDate&&item.endDate<today;
+  let datePart="";
+  if(item.startDate||item.endDate){
+    const fmtDate=d=>{if(!d)return"";const[y,m]=d.split("-");const ms=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];return ms[parseInt(m)-1]+" "+y;};
+    let ds="";
+    if(item.startDate&&item.endDate)ds=fmtDate(item.startDate)+" – "+fmtDate(item.endDate);
+    else if(item.startDate)ds="From "+fmtDate(item.startDate);
+    else ds="Due "+fmtDate(item.endDate);
+    datePart=`<span class="card-dates">${ds}${isOverdue?'&ensp;<span class="overdue-tag">Overdue</span>':""}</span>`;
+  }
+  return `<div class="card ${tint}${starredClass}" data-s="${sc}" onclick="openModal('${prod}','${half}',${idx})">
     <span class="card-bar ${BC[sc]}"></span>
     <div class="card-body">
       <div class="card-head">
         <div class="card-title">${item.t}</div>
-        <span class="st-pill ${SC[sc]}">${SL[sc]}</span>
+        <div style="display:flex;align-items:flex-start;gap:4px;flex-shrink:0;margin-top:1px">
+          <button class="star-btn${item.starred?" starred":""}" title="${item.starred?"Unstar":"Star"}" onclick="toggleStar('${prod}','${half}',${idx},event)">${item.starred?"★":"☆"}</button>
+          <span class="st-pill ${SC[sc]}">${SL[sc]}</span>
+        </div>
       </div>
       <div class="card-desc">${item.d}</div>
       <div class="card-foot">
         <span class="team-tag">${item.team}</span>
         <span class="pr-badge ${PC[item.p]}">${PL[item.p]}</span>
+        ${datePart}
         ${item.notion?`<a class="notion-lnk" href="${item.notion}" target="_blank" onclick="event.stopPropagation()">Notion ↗</a>`:""}
       </div>
     </div>
@@ -391,11 +451,14 @@ function mkCard(item,idx,prod,half){
 function buildPanel(id){
   const panel=document.getElementById("panel-"+id);
   const prod=PRODUCTS[id];
-  const h1=DATA[id].h1||[], h2=DATA[id].h2||[];
-  const all=[...h1,...h2];
+  const h1raw=DATA[id].h1||[], h2raw=DATA[id].h2||[];
+  const all=[...h1raw,...h2raw];
   const done=all.filter(i=>i.s==="done").length;
   const indev=all.filter(i=>i.s==="indev").length;
   const blocked=all.filter(i=>i.s==="blocked").length;
+  // Sort starred to top, preserving original indices for openModal
+  const h1sorted=h1raw.map((item,i)=>({item,i})).sort((a,b)=>(b.item.starred?1:0)-(a.item.starred?1:0));
+  const h2sorted=h2raw.map((item,i)=>({item,i})).sort((a,b)=>(b.item.starred?1:0)-(a.item.starred?1:0));
   panel.innerHTML=`
     <div class="product-hero" style="background:${prod.heroLight}">
       <div class="hero-row">
@@ -422,11 +485,11 @@ function buildPanel(id){
     </div>
     <div class="half-section">
       <div class="half-header"><span class="half-badge h1b">H1 2026</span><span class="count-chip" id="cnt-${id}-h1"></span></div>
-      <div class="grid" id="g-${id}-h1">${h1.map((item,i)=>mkCard(item,i,id,"h1")).join("")}</div>
+      <div class="grid" id="g-${id}-h1">${h1sorted.map(({item,i})=>mkCard(item,i,id,"h1")).join("")}</div>
     </div>
     <div class="half-section">
       <div class="half-header"><span class="half-badge h2b">H2 2026</span><span class="count-chip" id="cnt-${id}-h2"></span></div>
-      <div class="grid" id="g-${id}-h2">${h2.length?h2.map((item,i)=>mkCard(item,i,id,"h2")).join(""):`<div class="empty-state">No H2 items yet</div>`}</div>
+      <div class="grid" id="g-${id}-h2">${h2sorted.length?h2sorted.map(({item,i})=>mkCard(item,i,id,"h2")).join(""):`<div class="empty-state">No H2 items yet</div>`}</div>
     </div>`;
   updateCounts(id);
 }
@@ -478,6 +541,37 @@ function switchTab(tab){
   document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab===tab));
   document.querySelectorAll(".product-panel").forEach(p=>p.classList.toggle("active",p.id==="panel-"+tab));
   applyCardFilters(tab);
+}
+
+function rebuildGrids(id){
+  const h1raw=DATA[id].h1||[], h2raw=DATA[id].h2||[];
+  const h1sorted=h1raw.map((item,i)=>({item,i})).sort((a,b)=>(b.item.starred?1:0)-(a.item.starred?1:0));
+  const h2sorted=h2raw.map((item,i)=>({item,i})).sort((a,b)=>(b.item.starred?1:0)-(a.item.starred?1:0));
+  const g1=document.getElementById("g-"+id+"-h1");
+  const g2=document.getElementById("g-"+id+"-h2");
+  if(g1)g1.innerHTML=h1sorted.map(({item,i})=>mkCard(item,i,id,"h1")).join("");
+  if(g2)g2.innerHTML=h2sorted.length?h2sorted.map(({item,i})=>mkCard(item,i,id,"h2")).join(""):`<div class="empty-state">No H2 items yet</div>`;
+}
+
+async function toggleStar(prod,half,idx,e){
+  if(e)e.stopPropagation();
+  const item=DATA[prod][half][idx];
+  const wasStarred=!!item.starred;
+  if(!wasStarred){
+    const count=[...(DATA[prod].h1||[]),...(DATA[prod].h2||[])].filter(i=>i.starred).length;
+    if(count>=3){showToast("Maximum 3 starred items per product reached.","error");return;}
+  }
+  item.starred=!wasStarred;
+  rebuildGrids(prod);
+  applyCardFilters(prod);
+  try{
+    await persist();
+  }catch(err){
+    item.starred=wasStarred;
+    rebuildGrids(prod);
+    applyCardFilters(prod);
+    showToast("Failed to save. Please try again.","error");
+  }
 }
 
 function openModal(prod,half,idx){
