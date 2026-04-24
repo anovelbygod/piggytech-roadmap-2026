@@ -134,12 +134,13 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#1
 .card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:7px}
 .card-title{font-size:13.5px;font-weight:600;color:var(--text-primary);line-height:1.4;flex:1;min-width:0}
 .st-pill{padding:3px 8px;border-radius:20px;font-size:10.5px;font-weight:600;flex-shrink:0;white-space:nowrap;margin-top:1px}
-.card-desc{font-size:12.5px;color:var(--text-secondary);line-height:1.65;margin-bottom:10px}
+.card-desc{font-size:12.5px;color:#555;line-height:1.65;margin-bottom:10px}
+[data-theme="dark"] .card-desc{color:#aaa}
 .card-foot{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
 .team-tag{padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500;background:var(--chip-bg);color:var(--text-secondary)}
 .pr-badge{padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
-.notion-lnk{font-size:11px;color:var(--text-muted);text-decoration:none;margin-left:auto;transition:color .12s;white-space:nowrap;flex-shrink:0}
-.notion-lnk:hover{color:var(--text-secondary)}
+.link-chip{font-size:11px;padding:2px 8px;border-radius:20px;border:1px solid var(--border-card);background:var(--bg-surface);color:var(--text-secondary);text-decoration:none;transition:color .12s,border-color .12s;white-space:nowrap;flex-shrink:0;display:inline-flex;align-items:center}
+.link-chip:hover{color:var(--text-primary);border-color:#888}
 
 .bar-done{background:#10b981}.bar-indev{background:#3b82f6}.bar-scoping{background:#f59e0b}
 .bar-notstarted{background:#3a3a37}.bar-blocked{background:#ef4444}
@@ -380,6 +381,7 @@ function checkPw(){
       gate.style.display="none";
       const root=document.getElementById("root");
       root.style.display="block";
+      migrateLinks();
       Object.keys(DATA).forEach(buildPanel);
     },300);
   } else {
@@ -442,7 +444,7 @@ function mkCard(item,idx,prod,half){
         <span class="team-tag">${item.team}</span>
         <span class="pr-badge ${PC[item.p]}">${PL[item.p]}</span>
         ${datePart}
-        ${item.notion?`<a class="notion-lnk" href="${item.notion}" target="_blank" onclick="event.stopPropagation()">Notion ↗</a>`:""}
+        ${(item.links||(item.notion?[{label:"Notion",url:item.notion}]:[])).map(l=>`<a class="link-chip" href="${l.url}" target="_blank" onclick="event.stopPropagation()">${l.label||"Link"} ↗</a>`).join("")}
       </div>
     </div>
   </div>`;
@@ -543,6 +545,16 @@ function switchTab(tab){
   applyCardFilters(tab);
 }
 
+function migrateLinks(){
+  Object.keys(DATA).forEach(prod=>{
+    ["h1","h2"].forEach(half=>{
+      (DATA[prod][half]||[]).forEach(item=>{
+        if(item.notion&&!item.links){item.links=[{label:"Notion",url:item.notion}];delete item.notion;}
+      });
+    });
+  });
+}
+
 function rebuildGrids(id){
   const h1raw=DATA[id].h1||[], h2raw=DATA[id].h2||[];
   const h1sorted=h1raw.map((item,i)=>({item,i})).sort((a,b)=>(b.item.starred?1:0)-(a.item.starred?1:0));
@@ -584,7 +596,8 @@ function openModal(prod,half,idx){
   if(item.d)html+=`<div class="modal-section"><div class="modal-section-title">Description</div><div class="modal-text">${item.d}</div></div>`;
   if(item.assumptions&&item.assumptions.length)html+=`<div class="modal-section"><div class="modal-section-title">Assumptions</div><ul class="modal-list assumptions">${item.assumptions.map(a=>`<li>${a}</li>`).join("")}</ul></div>`;
   if(item.risks&&item.risks.length)html+=`<div class="modal-section"><div class="modal-section-title">Risks &amp; watch points</div><ul class="modal-list risks">${item.risks.map(r=>`<li>${r}</li>`).join("")}</ul></div>`;
-  if(item.notion)html+=`<div class="modal-section"><a class="modal-notion-btn" href="${item.notion}" target="_blank">View full doc in Notion ↗</a></div>`;
+  const modalLinks=item.links||(item.notion?[{label:"Notion",url:item.notion}]:[]);
+  if(modalLinks.length)html+=`<div class="modal-section"><div style="display:flex;gap:8px;flex-wrap:wrap">${modalLinks.map(l=>`<a class="modal-notion-btn" href="${l.url}" target="_blank">${l.label||"Link"} ↗</a>`).join("")}</div></div>`;
   document.getElementById("m-body").innerHTML=html;
   document.getElementById("modal-bg").classList.add("open");
   document.body.style.overflow="hidden";

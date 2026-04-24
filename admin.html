@@ -139,7 +139,7 @@ td.td-actions a.del:hover{color:#ef4444}
 .drag-handle:hover{color:var(--text-2)}
 .drag-handle:active{cursor:grabbing}
 .td-item-title{font-weight:600;color:var(--text-1);line-height:1.4;margin-bottom:2px;max-width:320px}
-.td-item-desc{font-size:11.5px;color:var(--text-3);line-height:1.45;max-width:320px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.td-item-desc{font-size:11.5px;color:var(--text-2);line-height:1.45;max-width:320px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .td-badge{display:inline-flex;align-items:center;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
 .empty-row td{text-align:center;padding:40px;color:var(--text-3);font-size:13px;cursor:default}
 
@@ -220,6 +220,14 @@ td.td-actions a.del:hover{color:#ef4444}
   .analytics-bar{flex-wrap:wrap}
   .stat-card{min-width:calc(50% - 5px)}
 }
+
+/* LINKS */
+.link-row{display:flex;gap:6px;align-items:center;margin-bottom:6px}
+.link-label{flex:0 0 110px!important;min-width:0}
+.link-remove-btn{width:28px;height:28px;flex-shrink:0;border:1px solid var(--border-main);background:var(--bg-surface);border-radius:6px;cursor:pointer;color:var(--text-3);font-size:11px;display:flex;align-items:center;justify-content:center;transition:all .12s;padding:0}
+.link-remove-btn:hover{background:#fee2e2;color:#ef4444;border-color:#fca5a5}
+.add-link-btn{margin-top:6px;padding:6px 12px;border-radius:7px;border:1px dashed var(--border-main);background:transparent;color:var(--text-2);font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .12s;width:100%;text-align:center}
+.add-link-btn:hover{border-color:#888;color:var(--text-1);background:var(--bg-hover)}
 
 /* STAR / DATES */
 td.td-actions a.star-action{font-size:15px;line-height:1;color:var(--text-3)}
@@ -454,8 +462,9 @@ td.td-actions a.star-action:hover{color:#f59e0b!important;background:var(--bg-ho
         <div class="char-count" id="cc-risks">0 / 500</div>
       </div>
       <div class="form-group form-full">
-        <label class="form-label">Notion URL <span style="font-size:10px;color:var(--text-3);font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
-        <input class="form-input" id="f-notion" type="url" placeholder="https://www.notion.so/…" oninput="markDirty()">
+        <label class="form-label">Links <span style="font-size:10px;color:var(--text-3);font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+        <div id="link-rows"></div>
+        <button type="button" class="add-link-btn" onclick="addLinkRow()">+ Add link</button>
       </div>
     </div>
   </div>
@@ -536,6 +545,7 @@ let searchQuery = '';
 let confirmCallback = null;
 let dragSrc = null;
 let sheetStarred = false;
+let sheetLinks = [];
 
 // ─── GATE ─────────────────────────────────────────────────────────────────────
 function togglePw() {
@@ -655,6 +665,7 @@ async function doReset() {
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 function init() {
+  migrateLinks();
   purgeExpiredTrash();
   renderTable();
   renderAnalytics();
@@ -836,7 +847,8 @@ function openSheet(ctx) {
     document.getElementById("f-desc").value = item.d || "";
     document.getElementById("f-assumptions").value = (item.assumptions||[]).join("\n");
     document.getElementById("f-risks").value = (item.risks||[]).join("\n");
-    document.getElementById("f-notion").value = item.notion || "";
+    sheetLinks = (item.links||[]).map(l=>({label:l.label||"",url:l.url||""}));
+    if (!sheetLinks.length && item.notion) sheetLinks = [{label:"Notion",url:item.notion}];
     document.getElementById("f-start-date").value = item.startDate || "";
     document.getElementById("f-end-date").value = item.endDate || "";
     sheetStarred = !!item.starred;
@@ -850,7 +862,7 @@ function openSheet(ctx) {
     document.getElementById("f-desc").value = "";
     document.getElementById("f-assumptions").value = "";
     document.getElementById("f-risks").value = "";
-    document.getElementById("f-notion").value = "";
+    sheetLinks = [];
     document.getElementById("f-start-date").value = "";
     document.getElementById("f-end-date").value = "";
     sheetStarred = false;
@@ -870,6 +882,7 @@ function openSheet(ctx) {
 
   updateBadgeStrip();
   updateSheetStar();
+  renderLinkRows();
 
   document.getElementById("sheet-overlay").classList.add("open");
   document.getElementById("sheet").classList.add("open");
@@ -924,9 +937,9 @@ async function saveItem() {
   const desc = document.getElementById("f-desc").value.trim();
   const assumptionsRaw = document.getElementById("f-assumptions").value;
   const risksRaw = document.getElementById("f-risks").value;
-  const notion = document.getElementById("f-notion").value.trim();
   const startDate = document.getElementById("f-start-date").value;
   const endDate = document.getElementById("f-end-date").value;
+  const links = sheetLinks.filter(l=>l.url.trim()).map(l=>({label:(l.label.trim()||"Link"),url:l.url.trim()}));
 
   const assumptions = assumptionsRaw.split("\n").map(s=>s.trim()).filter(Boolean);
   const risks = risksRaw.split("\n").map(s=>s.trim()).filter(Boolean);
@@ -966,7 +979,7 @@ async function saveItem() {
   };
   if (startDate) newItem.startDate = startDate;
   if (endDate) newItem.endDate = endDate;
-  if (notion) newItem.notion = notion;
+  if (links.length) newItem.links = links;
 
   // Stash original for rollback
   let rollbackFn = null;
@@ -1006,6 +1019,47 @@ async function saveItem() {
     btn.textContent = "Save";
     showToast("Failed to save. Please try again.", "error");
   }
+}
+
+// ─── LINKS ────────────────────────────────────────────────────────────────────
+function renderLinkRows() {
+  const container = document.getElementById("link-rows");
+  if (!container) return;
+  container.innerHTML = sheetLinks.map((link, i) =>
+    `<div class="link-row">` +
+    `<input type="text" class="form-input link-label" placeholder="Label" value="${esc(link.label)}" oninput="sheetLinks[${i}].label=this.value;markDirty()">` +
+    `<input type="url" class="form-input" placeholder="https://…" value="${esc(link.url)}" oninput="sheetLinks[${i}].url=this.value;markDirty()">` +
+    `<button type="button" class="link-remove-btn" onclick="removeLinkRow(${i})" title="Remove">✕</button>` +
+    `</div>`
+  ).join("");
+}
+
+function addLinkRow(label="", url="") {
+  sheetLinks.push({label, url});
+  renderLinkRows();
+  markDirty();
+}
+
+function removeLinkRow(i) {
+  sheetLinks.splice(i, 1);
+  renderLinkRows();
+  markDirty();
+}
+
+function migrateLinks() {
+  let needsSave = false;
+  Object.keys(DATA).forEach(prod => {
+    ["h1","h2"].forEach(half => {
+      (DATA[prod][half]||[]).forEach(item => {
+        if (item.notion && !item.links) {
+          item.links = [{label:"Notion", url:item.notion}];
+          delete item.notion;
+          needsSave = true;
+        }
+      });
+    });
+  });
+  if (needsSave) persist().catch(()=>{});
 }
 
 // ─── STAR ─────────────────────────────────────────────────────────────────────
